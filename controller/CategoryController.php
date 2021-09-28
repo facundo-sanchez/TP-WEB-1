@@ -10,10 +10,35 @@ class CategoryController{
         $this->model = new CategoryModel();
         $this->view = new NewsView();
     }
-    
+
     //Category
+
+    public function showCategory(){
+        $category = $this->model->getCategory();
+        return $category;
+    }
+
+    /*
+    public function showCategory(){
+        $category = $this->model->getCategory();
+        $this->view->renderHeader($category);
+        $this->view->renderCategory($category);
+    }
+    */
+    
+    public function showHeader($sesion,$category){
+
+        
+        if($sesion === false){
+            $this->view->renderHeader($category,false);
+        }else{
+            $this->view->renderHeader($category,$_SESSION['login']);
+        }
+        
+    }
+
     public function showConfirmUpdateCategory($sesion,$id){
-        if($sesion === true){
+        if($sesion === false){
             $category = $this->model->getCategoryID($id);
             $this->view->renderConfirmUpdateCategory($category);
         }else{
@@ -23,7 +48,7 @@ class CategoryController{
     }
 
     public function showUpdateCategory($sesion){
-        if($sesion === true){
+        if($sesion === false){
             $id_category = $_REQUEST['id_category'];
             $title_category = $_REQUEST['title_category'];
             $description_category = $_REQUEST['description_category'];
@@ -36,7 +61,7 @@ class CategoryController{
     }
 
     public function showSendCategory($sesion){
-        if($sesion === true){
+        if($sesion === false){
             $category = $_REQUEST['title_category'];
             $description = $_REQUEST['description_category'];
     
@@ -48,7 +73,7 @@ class CategoryController{
     }
 
     public function showConfirmDeleteCategory($sesion,$id){
-        if($sesion === true){
+        if($sesion === false){
             $url = 'delete-category';
             $this->view->renderConfirm($id,$url);
         }else{
@@ -58,7 +83,7 @@ class CategoryController{
     }
 
     public function showDeleteCategory($sesion,$id){
-        if($sesion === true){
+        if($sesion === false){
             $success = $this->model->deleteCategory($id);
             if($success === false){
                 $this->view->renderError('ERROR 404','Category Undefined Not Found');
@@ -70,5 +95,6 @@ class CategoryController{
         }
       
     }
+
 
 }
