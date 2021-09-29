@@ -38,16 +38,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="admin">Admin</a>
                         </li>
-                        <li class="nav-item">
                         {if $login === false}
-                             <a class="nav-link" href="login">Login</a>
-                             {else}
-                                  <a class="nav-link" href="sing-off">Cerrar</a>
+                             <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
+                              <li class="nav-item"><a class="nav-link" href="register-user">Register</a></li>
+                        {else}
+                            <li class="nav-item"> <a class="nav-link" href="sing-off">Out</a></li> 
                         {/if}
-                        
-                            
-                           
-                        </li>
                     </ul>
 
                 </div>

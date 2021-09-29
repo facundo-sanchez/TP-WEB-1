@@ -1,5 +1,5 @@
 <?php
-class UserModel extends SQLModel{
+class UserModel{
     private $host = 'localhost';
     private $db ='db_news';
     private $user = 'root';

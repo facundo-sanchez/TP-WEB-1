@@ -10,31 +10,63 @@ class UserController{
         $this->model = new UserModel();
         $this->view = new NewsView();
     }
+    public function ShowUser(){
     
-    public function showRegister(){
-        $email = $_POST['user_email'];
-        $password = $_POST['user_pass'];
+      $user = $this->model->UserLogin($_SESSION['email']);
+      return $user;
+
+    }
+
+    public function showGetRegister($sesion){
+        if($sesion === false){
+            $this->view->renderRegister();
+        }else{
+            header('Location:'.admin);
+        }
         
     }
 
-    public function showGetLogin(){
-        $this->view->renderLogin();
+    public function Register(){
+        if(!empty($_POST)){
+            $email = $_POST['user_email'];
+            $password = password_hash($_POST['user_pass'],PASSWORD_BCRYPT);
+    
+            $this->model->SingUp($email,$password);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+       
+        
+    }
+
+    public function showGetLogin($sesion){
+        if($sesion === false){
+            $this->view->renderLogin();
+        }else{
+            header('Location:'.admin);
+        }
+        
     }
 
     public function Login(){
-        $email = $_POST['user_email'];
-        $password = $_POST['user_pass'];
-
-        $user_data = $this->model->UserLogin($email);
-
-        if($user_data && password_verify($password,($user_data->password))){
-            $_SESSION['login'] = true;
-            $_SESSION['user'] = $email;
-
-            header('Location:'.admin);
+        if(!empty($_POST)){
+            $email = $_POST['user_email'];
+            $password = $_POST['user_pass'];
+    
+            $user_data = $this->model->UserLogin($email);
+     
+            if($user_data && password_verify ($password,($user_data->password))){
+                $_SESSION['login'] = true;
+                $_SESSION['email'] = $email;
+    
+                header('Location:'.admin);
+            }else{
+                $this->view->renderError('Login error','Email or password incorrect please try again');
+            }
         }else{
-            $this->view->renderError('Login error','Email or password incorrect please try again');
+            header('Location:'.BASE_URL);
         }
+        
 
     }
 

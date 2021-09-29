@@ -10,9 +10,9 @@ class NewsView{
         
     }
 
-    function renderHeader($category,$login){
+    function renderHeader($category,$sesion){
         $this->view->assign('category',$category);
-        $this->view->assign('login',$login);
+        $this->view->assign('login',$sesion);
         $this->view->display('./temp/header.tpl');
     }
 
@@ -49,6 +49,9 @@ class NewsView{
     }
 
     //access private
+    function renderRegister(){
+        $this->view->display('./temp/register.tpl');
+    }
     function renderLogin(){
         $this->view->display('./temp/login.tpl');
     }
@@ -57,15 +60,16 @@ class NewsView{
 
     }
 
-    function renderAdmin($news,$category){
+    function renderAdmin($news,$category,$admin){
         $this->view->assign('news',$news);
-
+        $this->view->assign('user',$admin);
         $this->view->assign('category',$category);
         $this->view->display('./temp/admin.tpl');
     }
 
-    function renderConfirmUpdateNews($news){
+    function renderConfirmUpdateNews($news,$category){
         $this->view->assign('news',$news);
+        $this->view->assign('category',$category);
         $this->view->display('./temp/news-update.tpl');
     }
 

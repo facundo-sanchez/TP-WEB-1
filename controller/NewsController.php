@@ -1,5 +1,14 @@
 <?php
 
+/*
+seguridad en delete,update,send terminado
+Notas -> Buscar errores de sesion
+simplificar codigo (SI PUEDO HACER HERENCIA DE SQL)
+
+
+*/
+
+
 require_once('./view/NewsView.php');
 require_once('./model/NewsModel.php');
 
@@ -13,9 +22,6 @@ class NewsController{
     }
     
     //public access
-
-
-    
     public function showNotFound($title,$error){
         $this->view->renderError($title,$error);
     }
@@ -24,7 +30,6 @@ class NewsController{
         $news = $this->model->getNews();
       
         if(count($news) === 0){
-            var_dump($news);
             $this->view->renderError('ERROR 404','Not found news');
         }else{
             $this->view->renderHome($news);
@@ -33,7 +38,7 @@ class NewsController{
 
     public function showNews($id){
         $news = $this->model->getNewsId($id);
-      
+
         if($news === false){
             $this->view->renderError('ERROR 404','Not found news');
         }else{
@@ -43,8 +48,8 @@ class NewsController{
 
     public function showFilter($id){
         $category_filter = $this->model->getFilter($id);
-
-        if($category_filter == false){
+       
+        if(empty($category_filter)){
             $this->view->renderError('ERROR 404','Category or News not found');
         }else{
             $this->view->renderFilter($category_filter);
@@ -52,51 +57,79 @@ class NewsController{
     }
     
     //private access
-    public function showAdminNews($sesion,$category){
+    public function showAdminNews($category,$admin){
         //buscar categorias y noticias para update y delete
-        if($sesion === true){
-            $news = $this->model->getNews();
-            $this->view->renderAdmin($news,$category);
-        }else{
-            header('Location:'.BASE_URL);
-        }
-        
+        $news = $this->model->getNews();
+        $this->view->renderAdmin($news,$category,$admin);
     }
 
     //News
     public function showSendNews($sesion){
-        $title = $_REQUEST['title_news'];
-        $category = $_REQUEST['category_news'];
-        $description = $_REQUEST['description_news'];
+        if($sesion === true){
+            if(!empty($_POST)){
+                $title = $_REQUEST['title_news'];
+                $category = $_REQUEST['category_news'];
+                $description = $_REQUEST['description_news'];
+        
+                $this->model->sendNews($title,$category,$description);
+            }else{
+                header('Location:'.admin);
+            }
 
-        $this->model->sendNews($title,$category,$description);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+      
     }
 
-    public function showConfirmUpdateNews($sesion,$id){
-        $news = $this->model->getNewsId($id);
-        $this->view->renderConfirmUpdateNews($news);
+    public function showConfirmUpdateNews($sesion,$category,$id){
+        if($sesion === true){
+            $news = $this->model->getNewsId($id);
+            $this->view->renderConfirmUpdateNews($news,$category);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+
+       
     }
 
     public function showUpdateNews($sesion){
-        $id_news = $_REQUEST['id_news'];
-        $title_news = $_REQUEST['title_news'];
-        $category_news = $_REQUEST['category_news'];
-        $description_news = $_REQUEST['description_news'];
-       
-        $this->model->updateNews($id_news,$title_news,$category_news,$description_news); 
+        if($sesion === true){
+            if(!empty($_POST)){
+                $id_news = $_REQUEST['id_news'];
+                $title_news = $_REQUEST['title_news'];
+                $category_news = $_REQUEST['category_news'];
+                $description_news = $_REQUEST['description_news'];
+               
+                $this->model->updateNews($id_news,$title_news,$category_news,$description_news); 
+            }else{
+                header('Location:'.admin);
+            }
+           
+        }else{
+            header('Location:'.BASE_URL);
+        }
+     
     }
 
     public function showConfirmDeleteNews($sesion,$id){
-        $url = 'delete-news';
-        $this->view->renderConfirm($id,$url);
+        if($sesion === true){
+            $url = 'delete-news';
+            $this->view->renderConfirm($id,$url);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+      
     }
 
     public function showDeleteNews($sesion,$id){
         //jacerlo con ajax para mostrar mensaje de eliminado.
-        $this->model->deleteNews($id);
-        header('Location:'.admin);
+        if($sesion === true){
+            $this->model->deleteNews($id);
+            header('Location:'.admin);
+        }else{
+            header('Location:'.BASE_URL);
+        }
     } 
-
-
 
 }

@@ -27,18 +27,34 @@ class CategoryController{
     */
     
     public function showHeader($sesion,$category){
-
-        
-        if($sesion === false){
-            $this->view->renderHeader($category,false);
+        //var_dump($sesion);
+        if($sesion === true){
+            $this->view->renderHeader($category,$sesion);
         }else{
-            $this->view->renderHeader($category,$_SESSION['login']);
+            $this->view->renderHeader($category,false);
         }
         
     }
 
+    public function showSendCategory($sesion){
+        if($sesion === true){
+            
+            if(!empty($_POST)){
+                $category = $_REQUEST['title_category'];
+                $description = $_REQUEST['description_category'];
+                $this->model->sendCategory($category,$description);
+            }else{
+                header('Location:'.admin);
+            }
+
+        }else{
+            header('Location:'.BASE_URL);
+        }
+       
+    }
+
     public function showConfirmUpdateCategory($sesion,$id){
-        if($sesion === false){
+        if($sesion === true){
             $category = $this->model->getCategoryID($id);
             $this->view->renderConfirmUpdateCategory($category);
         }else{
@@ -48,24 +64,17 @@ class CategoryController{
     }
 
     public function showUpdateCategory($sesion){
-        if($sesion === false){
-            $id_category = $_REQUEST['id_category'];
-            $title_category = $_REQUEST['title_category'];
-            $description_category = $_REQUEST['description_category'];
-    
-            $this->model->updateCategory($id_category,$title_category,$description_category);
-        }else{
-            header('Location:'.BASE_URL);
-        }
-       
-    }
-
-    public function showSendCategory($sesion){
-        if($sesion === false){
-            $category = $_REQUEST['title_category'];
-            $description = $_REQUEST['description_category'];
-    
-            $this->model->sendCategory($category,$description);
+        if($sesion === true){
+            if(!empty($_POST)){
+                $id_category = $_REQUEST['id_category'];
+                $title_category = $_REQUEST['title_category'];
+                $description_category = $_REQUEST['description_category'];
+        
+                $this->model->updateCategory($id_category,$title_category,$description_category);
+            }else{
+               header('Location:'.admin);
+            }
+          
         }else{
             header('Location:'.BASE_URL);
         }
@@ -73,7 +82,7 @@ class CategoryController{
     }
 
     public function showConfirmDeleteCategory($sesion,$id){
-        if($sesion === false){
+        if($sesion === true){
             $url = 'delete-category';
             $this->view->renderConfirm($id,$url);
         }else{
@@ -83,12 +92,14 @@ class CategoryController{
     }
 
     public function showDeleteCategory($sesion,$id){
-        if($sesion === false){
-            $success = $this->model->deleteCategory($id);
-            if($success === false){
-                $this->view->renderError('ERROR 404','Category Undefined Not Found');
-            }else{
-                header('Location:'.admin);
+        if($sesion === true){
+            if ($id != null){
+                $success = $this->model->deleteCategory($id);
+                if($success === false){
+                    $this->view->renderError('ERROR 404','Category Undefined Not Found');
+                }else{
+                    header('Location:'.admin);
+                }
             }
         }else{
             header('Location:'.BASE_URL);

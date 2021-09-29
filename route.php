@@ -13,8 +13,9 @@ $controller_news = new NewsController();
 $controller_category = new CategoryController();
 $controller_user = new UserController();
 
+$sesion = $controller_user->VerifySession();
 
-$controller_category->showHeader($controller_user->VerifySession(),$controller_category->showCategory());
+$controller_category->showHeader($sesion,$controller_category->showCategory());
 
 if(!empty($_GET['action'])){
     $action = $_GET['action'];
@@ -26,11 +27,7 @@ $params = explode('/',$action);
 
 switch($params[0]){
     case 'home':
-        if(empty($params[1])){
-            $controller_news->showHome();
-        }else{
-            header('Location:'.BASE_URL);
-        }
+        $controller_news->showHome();
         break;
         
     case 'news':
@@ -44,19 +41,24 @@ switch($params[0]){
     */
 
     case 'filter':
-        $controller_news->showFilter($params[1]);
+        if(isset($params[1])){
+            $controller_news->showFilter($params[1]);
+        }else{
+            $controller_news->showNotFound('ERROR 404','Category not found');
+        }
+        break;
+
+    case 'register-user':
+        //animacion para el registro
+        $controller_user->showGetRegister($sesion);
+        break;
+
+    case 'register':
+        $controller_user->Register();
         break;
 
     case 'login':
-        //parametros del user y password
-
-        //esto va en la funcion de login
-        
-        $_SESSION['login'] = true;
-        $_SESSION['user'] = 'facundo11';
-
-        $controller_user->showGetLogin();
-        var_dump($_SESSION);
+        $controller_user->showGetLogin($sesion);
         break;
 
     case 'confirm-login':
@@ -64,9 +66,13 @@ switch($params[0]){
         break;
 
     case 'admin':
-        $category = $controller_category->showCategory();
-        $controller_news->showAdminNews($controller_user->VerifySession(),$category);
-        
+        if($sesion === true){
+            $category = $controller_category->showCategory();
+            $admin = $controller_user->ShowUser();
+            $controller_news->showAdminNews($category,$admin);
+        }else{
+            header('Location:'.BASE_URL);
+        }
         break;
 
     //news
@@ -75,25 +81,35 @@ switch($params[0]){
         break;
 
     case 'confirm-update-news':
-        $controller_news->showConfirmUpdateNews($sesion,$params[1]);
-        break;
-
-    case 'update-news':
-        $sesion = $controller->VerifySession();
-        if($sesion === true){
-            $controller_news->showUpdateNews($sesion);
+        if(isset($params[1])){
+            $category = $controller_category->showCategory();
+            $controller_news->showConfirmUpdateNews($sesion,$category,$params[1]);
         }else{
             header('Location:'.BASE_URL);
         }
-       
+      
+        break;
+
+    case 'update-news':
+        $controller_news->showUpdateNews($sesion);
         break;
 
     case 'confirm-delete-news':
-        $controller_news->showConfirmDeleteNews($sesion,$params[1]);
+        if(isset($params[1])){
+            $controller_news->showConfirmDeleteNews($sesion,$params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+        
         break;
 
     case 'delete-news':
-        $controller_news->showDeleteNews($sesion,$params[1]);
+        if(isset($params[1])){
+            $controller_news->showDeleteNews($sesion,$params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+      
         break;
   
     //category
@@ -102,7 +118,12 @@ switch($params[0]){
         break;
 
     case 'confirm-update-category':
-        $controller_category->showConfirmUpdateCategory($sesion,$params[1]);
+        if(isset($params[1])){
+            $controller_category->showConfirmUpdateCategory($sesion,$params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+      
         break;
         
     case 'update-category':
@@ -110,11 +131,21 @@ switch($params[0]){
         break;
 
     case 'confirm-delete-category':
-        $controller_category->showConfirmDeleteCategory($sesion,$params[1]);
+        if(isset($params[1])){
+            $controller_category->showConfirmDeleteCategory($sesion,$params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+      
         break;
 
     case 'delete-category':
-        $controller_category->showDeleteCategory($sesion,$params[1]);
+        if(isset($params[1])){
+            $controller_category->showDeleteCategory($sesion,$params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+        }
+       
         break;
 
     case 'sing-off':

@@ -1,5 +1,7 @@
 <div id="accordion">
+   <h1>Admin: {$user->email}</h1>
     <div class="card border-secondary m-5">
+ 
         <div class="card-header" id="headingOne">
             <h5 class="mb-0">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -7,6 +9,7 @@
                   </button>
             </h5>
         </div>
+
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
 
             <div class="card text-center">
