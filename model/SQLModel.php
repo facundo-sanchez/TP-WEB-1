@@ -2,11 +2,11 @@
 <?php
 
 class SQLModel{
-    private $host = 'localhost';
-    private $db ='db_news';
-    private $user = 'root';
-    private $password = '';
-    private $connect;
+    protected $host = 'localhost';
+    protected $db ='db_news';
+    protected $user = 'root';
+    protected $password = '';
+    protected $connect;
     
     public function __construct(){
         $connectSQL = "mysql:host=$this->host;"."dbname=$this->db;charset=utf8";

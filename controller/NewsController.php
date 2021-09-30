@@ -58,7 +58,6 @@ class NewsController{
     
     //private access
     public function showAdminNews($category,$admin){
-        //buscar categorias y noticias para update y delete
         $news = $this->model->getNews();
         $this->view->renderAdmin($news,$category,$admin);
     }
@@ -89,8 +88,6 @@ class NewsController{
         }else{
             header('Location:'.BASE_URL);
         }
-
-       
     }
 
     public function showUpdateNews($sesion){

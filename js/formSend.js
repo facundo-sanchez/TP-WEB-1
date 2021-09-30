@@ -57,7 +57,7 @@ async function server(data, url, news) {
             body: data,
         })
         if (response.ok) {
-            //setTimeout(reload_server, 1000);
+            setTimeout(reload_server, 1000);
 
             if (news === true) {
                 succesSend_news();

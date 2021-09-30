@@ -79,8 +79,8 @@ class UserController{
         return false;
     }
     public function ShowSingOff(){
-       
-        //session_unset();
+    
+        session_unset();
         session_destroy();
 
         header('Location:'.BASE_URL);
