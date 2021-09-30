@@ -77,7 +77,6 @@ class NewsModel extends SQLModel{
         try{
             $query = $this->connect->prepare('DELETE FROM news WHERE id = ?');
             $query->execute([$id]);
-
         }catch(Exception $e){
             echo 'ERRPR'.$e->getMessage();
         }

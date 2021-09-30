@@ -4,7 +4,7 @@
     {$title}
   </div>
   <div class="card-body">
-    <h5 class="card-title">{$error}</h5>
+    <h5 class="card-title">{$message}</h5>
     <a href="home" class="btn btn-primary">Go Home</a>
   </div>
 </div>

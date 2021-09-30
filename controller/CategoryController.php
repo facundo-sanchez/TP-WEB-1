@@ -40,8 +40,8 @@ class CategoryController{
         if($sesion === true){
             
             if(!empty($_POST)){
-                $category = $_REQUEST['title_category'];
-                $description = $_REQUEST['description_category'];
+                $category = $_POST['title_category'];
+                $description = $_POST['description_category'];
                 $this->model->sendCategory($category,$description);
             }else{
                 header('Location:'.admin);
@@ -56,7 +56,12 @@ class CategoryController{
     public function showConfirmUpdateCategory($sesion,$id){
         if($sesion === true){
             $category = $this->model->getCategoryID($id);
-            $this->view->renderConfirmUpdateCategory($category);
+            if($category != false){
+                $this->view->renderConfirmUpdateCategory($category);
+            }else{
+                $this->view->RenderMessage('ERROR 404','Category not found');
+            }
+            
         }else{
             header('Location:'.BASE_URL);
         }
@@ -66,9 +71,9 @@ class CategoryController{
     public function showUpdateCategory($sesion){
         if($sesion === true){
             if(!empty($_POST)){
-                $id_category = $_REQUEST['id_category'];
-                $title_category = $_REQUEST['title_category'];
-                $description_category = $_REQUEST['description_category'];
+                $id_category = $_POST['id_category'];
+                $title_category = $_POST['title_category'];
+                $description_category = $_POST['description_category'];
         
                 $this->model->updateCategory($id_category,$title_category,$description_category);
             }else{
@@ -96,7 +101,7 @@ class CategoryController{
             if ($id != null){
                 $success = $this->model->deleteCategory($id);
                 if($success === false){
-                    $this->view->renderError('ERROR 404','Category Undefined Not Found');
+                    $this->view->RenderMessage('ERROR 404','Category Undefined Not Found');
                 }else{
                     header('Location:'.admin);
                 }

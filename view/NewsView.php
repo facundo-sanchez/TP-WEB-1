@@ -41,10 +41,10 @@ class NewsView{
        
     }
 
-    function renderError($title,$error){
+    function RenderMessage($title,$message){
         $this->view->assign('title',$title);
-        $this->view->assign('error',$error);
-        $this->view->display('./temp/404.tpl');
+        $this->view->assign('message',$message);
+        $this->view->display('./temp/message.tpl');
       
     }
 

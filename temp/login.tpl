@@ -1,5 +1,5 @@
 <article class = "form-login">
-<h1>Login</h1>
+<h1 class="card-title p-3">Login</h1>
     <form class = "m-3"  action = "confirm-login"  method ="POST">
         <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>

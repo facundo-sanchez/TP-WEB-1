@@ -10,8 +10,8 @@ class UserController{
         $this->model = new UserModel();
         $this->view = new NewsView();
     }
-    public function ShowUser(){
     
+    public function ShowUser(){
       $user = $this->model->UserLogin($_SESSION['email']);
       return $user;
 
@@ -23,7 +23,6 @@ class UserController{
         }else{
             header('Location:'.admin);
         }
-        
     }
 
     public function Register(){
@@ -31,12 +30,16 @@ class UserController{
             $email = $_POST['user_email'];
             $password = password_hash($_POST['user_pass'],PASSWORD_BCRYPT);
     
-            $this->model->SingUp($email,$password);
+            $validate = $this->model->SingUp($email,$password);
+            
+            if($validate === false){
+                $this->view->RenderMessage('EMAIL REGISTERED','Email already registered');
+            }else{
+                $this->view->RenderMessage('Registered Email','The email has been registered correctly.');
+            }
         }else{
             header('Location:'.BASE_URL);
-        }
-       
-        
+        } 
     }
 
     public function showGetLogin($sesion){
@@ -61,7 +64,7 @@ class UserController{
     
                 header('Location:'.admin);
             }else{
-                $this->view->renderError('Login error','Email or password incorrect please try again');
+                $this->view->RenderMessage('Login error','Email or password incorrect please try again');
             }
         }else{
             header('Location:'.BASE_URL);

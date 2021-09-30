@@ -1,7 +1,11 @@
 <footer>
             <div class="navbar navbar-expand-lg navbar-light bg-primary mt-3">
-                <a class="navbar-brand" href="home">News</a>
+                <a class="navbar-brand">Ciencias Exactas - TUDAI</a>
+                <a class="navbar-brand">Facundo Sanchez</a>
             </div>
+                        
+               
+   
         </footer>
 
     </div>

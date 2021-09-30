@@ -19,6 +19,8 @@ async function server(data, url) {
         });
         if (response.ok) {
             console.log('registrado');
+            document.querySelector('#form-register').classList.add('d-none');
+            document.querySelector('#content-register').classList.remove('d-none');
         }
     } catch (error) {
         console.log(error);

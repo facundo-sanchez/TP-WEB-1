@@ -1,6 +1,6 @@
 <article class = "form-login">
-<h1>Register</h1>
-    <form id ="form-register" class = "m-3" method ="POST">
+<h1 class="card-title p-3">Register</h1>
+    <form action = 'register' class = "m-3" method ="POST">
         <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
@@ -20,5 +20,4 @@
         </div>
     </form>
 </article>
-<script src="./js/formRegister.js"></script>
 {include file="./footer.tpl"}

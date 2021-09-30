@@ -23,14 +23,14 @@ class NewsController{
     
     //public access
     public function showNotFound($title,$error){
-        $this->view->renderError($title,$error);
+        $this->view->RenderMessage($title,$error);
     }
 
     public function showHome(){
         $news = $this->model->getNews();
       
         if(count($news) === 0){
-            $this->view->renderError('ERROR 404','Not found news');
+            $this->view->RenderMessage('ERROR 404','Not found news');
         }else{
             $this->view->renderHome($news);
         }
@@ -40,7 +40,7 @@ class NewsController{
         $news = $this->model->getNewsId($id);
 
         if($news === false){
-            $this->view->renderError('ERROR 404','Not found news');
+            $this->view->RenderMessage('ERROR 404','Not found news');
         }else{
             $this->view->renderNews($news);
         }
@@ -50,7 +50,7 @@ class NewsController{
         $category_filter = $this->model->getFilter($id);
        
         if(empty($category_filter)){
-            $this->view->renderError('ERROR 404','Category or News not found');
+            $this->view->RenderMessage('ERROR 404','Category or News not found');
         }else{
             $this->view->renderFilter($category_filter);
         }
@@ -66,9 +66,9 @@ class NewsController{
     public function showSendNews($sesion){
         if($sesion === true){
             if(!empty($_POST)){
-                $title = $_REQUEST['title_news'];
-                $category = $_REQUEST['category_news'];
-                $description = $_REQUEST['description_news'];
+                $title = $_POST['title_news'];
+                $category = $_POST['category_news'];
+                $description = $_POST['description_news'];
         
                 $this->model->sendNews($title,$category,$description);
             }else{
@@ -84,7 +84,12 @@ class NewsController{
     public function showConfirmUpdateNews($sesion,$category,$id){
         if($sesion === true){
             $news = $this->model->getNewsId($id);
-            $this->view->renderConfirmUpdateNews($news,$category);
+            if($news !=false){
+                $this->view->renderConfirmUpdateNews($news,$category);
+            }else{
+                $this->view->RenderMessage('ERROR 404','News not found');
+            }
+           
         }else{
             header('Location:'.BASE_URL);
         }
@@ -93,10 +98,10 @@ class NewsController{
     public function showUpdateNews($sesion){
         if($sesion === true){
             if(!empty($_POST)){
-                $id_news = $_REQUEST['id_news'];
-                $title_news = $_REQUEST['title_news'];
-                $category_news = $_REQUEST['category_news'];
-                $description_news = $_REQUEST['description_news'];
+                $id_news = $_POST['id_news'];
+                $title_news = $_POST['title_news'];
+                $category_news = $_POST['category_news'];
+                $description_news = $_POST['description_news'];
                
                 $this->model->updateNews($id_news,$title_news,$category_news,$description_news); 
             }else{
