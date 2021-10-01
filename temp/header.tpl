@@ -40,7 +40,7 @@
                         </li>
                         {if $login === false}
                              <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
-                              <li class="nav-item"><a class="nav-link" href="register-user">Register</a></li>
+                              <li class="nav-item"><a class="nav-link" href="register">Register</a></li>
                         {else}
                             <li class="nav-item"> <a class="nav-link" href="sing-off">Out</a></li> 
                         {/if}

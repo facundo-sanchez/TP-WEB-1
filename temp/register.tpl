@@ -18,6 +18,16 @@
             <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
         </div>
+        {if $error === true}
+            <div class="alert alert-danger" role="alert">
+                Email already registered!
+            </div>
+            {elseif $error === false}
+                <div class="alert alert-success" role="alert">
+                    The email has been registered correctly!
+                </div>
+        {/if}
+        
     </form>
 </article>
 {include file="./footer.tpl"}

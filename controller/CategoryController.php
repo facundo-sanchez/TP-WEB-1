@@ -45,10 +45,12 @@ class CategoryController{
                 $this->model->sendCategory($category,$description);
             }else{
                 header('Location:'.admin);
+                die();
             }
 
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
        
     }
@@ -64,6 +66,7 @@ class CategoryController{
             
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
 
     }
@@ -78,10 +81,12 @@ class CategoryController{
                 $this->model->updateCategory($id_category,$title_category,$description_category);
             }else{
                header('Location:'.admin);
+               die();
             }
           
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
        
     }
@@ -89,9 +94,10 @@ class CategoryController{
     public function showConfirmDeleteCategory($sesion,$id){
         if($sesion === true){
             $url = 'delete-category';
-            $this->view->renderConfirm($id,$url);
+            $this->view->renderConfirm($id,$url,false);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
        
     }
@@ -99,15 +105,22 @@ class CategoryController{
     public function showDeleteCategory($sesion,$id){
         if($sesion === true){
             if ($id != null){
-                $success = $this->model->deleteCategory($id);
-                if($success === false){
+                $undefined = $this->model->getUndefined();
+
+                if($undefined === false){
                     $this->view->RenderMessage('ERROR 404','Category Undefined Not Found');
                 }else{
-                    header('Location:'.admin);
+                    $this->model->deleteCategory($id,$undefined);
+                    $this->view->renderConfirm(0,0,true);
                 }
+                
+            }else{
+               header('Location:'.admin);
+               die();
             }
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
       
     }

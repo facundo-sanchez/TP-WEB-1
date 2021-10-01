@@ -1,9 +1,7 @@
 <?php
 require_once('controller/NewsController.php');
 require_once('controller/CategoryController.php');
-require_once('controller/UserController.php');
-
-session_start();
+require_once('controller/AuthController.php');
 
 //urls
 define('BASE_URL','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/home');
@@ -11,7 +9,7 @@ define('admin','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname(
 
 $controller_news = new NewsController();
 $controller_category = new CategoryController();
-$controller_user = new UserController();
+$controller_user = new AuthController();
 
 $sesion = $controller_user->VerifySession();
 
@@ -48,21 +46,22 @@ switch($params[0]){
         }
         break;
 
-    case 'register-user':
-        //animacion para el registro
-        $controller_user->showGetRegister($sesion);
-        break;
-
     case 'register':
-        $controller_user->Register();
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $controller_user->Register();
+        }else{
+            $controller_user->showGetRegister($sesion);
+        }
+      
         break;
 
     case 'login':
-        $controller_user->showGetLogin($sesion);
-        break;
-
-    case 'confirm-login':
-        $controller_user->Login();
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $controller_user->Login();
+        }else{
+            $controller_user->showGetLogin($sesion);
+        }
+    
         break;
 
     case 'admin':
@@ -149,7 +148,7 @@ switch($params[0]){
         break;
 
     case 'sing-off':
-        $controller_user->ShowSingOff();
+        $controller_user->SingOff();
         break;
 
     default:

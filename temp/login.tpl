@@ -1,6 +1,6 @@
 <article class = "form-login">
 <h1 class="card-title p-3">Login</h1>
-    <form class = "m-3"  action = "confirm-login"  method ="POST">
+    <form class = "m-3"  action = "login"  method ="POST">
         <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
@@ -19,6 +19,11 @@
             </div>
         </div>
     </form>
+    {if $error === true}
+        <div class="alert alert-danger" role="alert">
+            Email or password to incorrect!
+        </div>
+    {/if}
 </article>
 
 {include file="./footer.tpl"}

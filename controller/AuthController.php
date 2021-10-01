@@ -1,16 +1,25 @@
 <?php
-require_once('./model/UserModel.php');
+require_once('./model/AuthModel.php');
 require_once('./view/NewsView.php');
 
-class UserController{
+class AuthController{
     private $model;
     private $view;
 
     public function __construct(){
-        $this->model = new UserModel();
+        $this->model = new AuthModel();
         $this->view = new NewsView();
     }
-    
+
+    public function VerifySession(){
+        session_start();
+        if(isset($_SESSION['login']) && $_SESSION['login'] === true){
+            return true;
+        }
+        
+        return false;
+    }
+
     public function ShowUser(){
       $user = $this->model->UserLogin($_SESSION['email']);
       return $user;
@@ -19,9 +28,10 @@ class UserController{
 
     public function showGetRegister($sesion){
         if($sesion === false){
-            $this->view->renderRegister();
+            $this->view->renderRegister(null);
         }else{
             header('Location:'.admin);
+            die();
         }
     }
 
@@ -33,20 +43,24 @@ class UserController{
             $validate = $this->model->SingUp($email,$password);
             
             if($validate === false){
-                $this->view->RenderMessage('EMAIL REGISTERED','Email already registered');
+                $this->view->renderRegister(true);
+                //$this->view->RenderMessage('EMAIL REGISTERED','Email already registered');
             }else{
-                $this->view->RenderMessage('Registered Email','The email has been registered correctly.');
+                $this->view->renderRegister(false);
+               // $this->view->RenderMessage('Registered Email','The email has been registered correctly.');
             }
         }else{
             header('Location:'.BASE_URL);
+            die();
         } 
     }
 
     public function showGetLogin($sesion){
         if($sesion === false){
-            $this->view->renderLogin();
+            $this->view->renderLogin(false);
         }else{
             header('Location:'.admin);
+            die();
         }
         
     }
@@ -60,32 +74,29 @@ class UserController{
      
             if($user_data && password_verify ($password,($user_data->password))){
                 $_SESSION['login'] = true;
-                $_SESSION['email'] = $email;
+                $_SESSION['user_id'] = $user_data->id;
+                $_SESSION['email'] = $user_data->email;
+                
     
                 header('Location:'.admin);
+                die();
             }else{
-                $this->view->RenderMessage('Login error','Email or password incorrect please try again');
+                $this->view->renderLogin(true);
+                //$this->view->RenderMessage('Login error','Email or password incorrect please try again');
             }
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
         
 
     }
-
-    public function VerifySession(){
-        
-        if(isset($_SESSION['login']) && $_SESSION['login'] === true){
-            return true;
-        }
-        
-        return false;
-    }
-    public function ShowSingOff(){
     
+    public function SingOff(){
         session_unset();
         session_destroy();
 
         header('Location:'.BASE_URL);
+        die();
     }
 }

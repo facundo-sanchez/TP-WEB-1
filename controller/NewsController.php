@@ -1,14 +1,5 @@
 <?php
 
-/*
-seguridad en delete,update,send terminado
-Notas -> Buscar errores de sesion
-simplificar codigo (SI PUEDO HACER HERENCIA DE SQL)
-
-
-*/
-
-
 require_once('./view/NewsView.php');
 require_once('./model/NewsModel.php');
 
@@ -73,10 +64,12 @@ class NewsController{
                 $this->model->sendNews($title,$category,$description);
             }else{
                 header('Location:'.admin);
+                die();
             }
 
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
       
     }
@@ -92,11 +85,13 @@ class NewsController{
            
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
     }
 
     public function showUpdateNews($sesion){
         if($sesion === true){
+
             if(!empty($_POST)){
                 $id_news = $_POST['id_news'];
                 $title_news = $_POST['title_news'];
@@ -106,10 +101,12 @@ class NewsController{
                 $this->model->updateNews($id_news,$title_news,$category_news,$description_news); 
             }else{
                 header('Location:'.admin);
+                die();
             }
            
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
      
     }
@@ -117,20 +114,26 @@ class NewsController{
     public function showConfirmDeleteNews($sesion,$id){
         if($sesion === true){
             $url = 'delete-news';
-            $this->view->renderConfirm($id,$url);
+            $this->view->renderConfirm($id,$url,false);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
       
     }
 
     public function showDeleteNews($sesion,$id){
-        //jacerlo con ajax para mostrar mensaje de eliminado.
         if($sesion === true){
-            $this->model->deleteNews($id);
-            header('Location:'.admin);
+            if($id !=null){
+                $this->model->deleteNews($id);
+                $this->view->renderConfirm(0,0,true);
+            }else{
+                header('Location:'.admin);
+                die();
+            }
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
     } 
 

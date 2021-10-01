@@ -42,24 +42,22 @@ class CategoryModel extends SQLModel{
         }
         
     }
-    function deleteCategory($id){
+    function getUndefined(){
+        $query = $this->connect->prepare('SELECT * FROM categories WHERE category = ?');
+        $query->execute(['Undefined']);
+        $result = $query->fetch(PDO::FETCH_OBJ);
+        return $result;
+    }
+    
+    function deleteCategory($id,$undefined){
         try{
-            $id_undefined = 5;
             //'SELECT * FROM categories WHERE id = ? || title = ?'
-            $query = $this->connect->prepare('SELECT * FROM categories WHERE id IN (?)');
-            $query->execute([$id_undefined]);
-            $result = $query->fetch(PDO::FETCH_OBJ);
+            $query= $this->connect->prepare('UPDATE news SET id_category = ? WHERE id_category = ?');
+            $query->execute([$undefined->id,$id]);
+
+            $query = $this->connect->prepare('DELETE FROM categories WHERE id = ?');
+            $query->execute([$id]);
             
-            if($result === false){
-                return false;
-            }else{
-                $query= $this->connect->prepare('UPDATE news SET id_category = ? WHERE id_category = ?');
-                $query->execute([$id_undefined,$id]);
-                $query = $this->connect->prepare('DELETE FROM categories WHERE id = ?');
-                $query->execute([$id]);
-                
-            }
-           
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();
         }

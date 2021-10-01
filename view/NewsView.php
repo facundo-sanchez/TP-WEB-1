@@ -49,10 +49,12 @@ class NewsView{
     }
 
     //access private
-    function renderRegister(){
+    function renderRegister($error){
+        $this->view->assign('error',$error);
         $this->view->display('./temp/register.tpl');
     }
-    function renderLogin(){
+    function renderLogin($error){
+        $this->view->assign('error',$error);
         $this->view->display('./temp/login.tpl');
     }
 
@@ -78,7 +80,8 @@ class NewsView{
         $this->view->display('./temp/category-update.tpl');
     }
 
-    function renderConfirm($id,$url){
+    function renderConfirm($id,$url,$delete){
+        $this->view->assign('delete',$delete);
         $this->view->assign('id',$id);
         $this->view->assign('title','Delete News/Category ');
         $this->view->assign('url',$url);
