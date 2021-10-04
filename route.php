@@ -6,14 +6,13 @@ require_once('controller/AuthController.php');
 //urls
 define('BASE_URL','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/home');
 define('admin','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/admin');
+define('login','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/login');
 
 $controller_news = new NewsController();
 $controller_category = new CategoryController();
 $controller_user = new AuthController();
 
-$sesion = $controller_user->VerifySession();
-
-$controller_category->showHeader($sesion,$controller_category->showCategory());
+$controller_category->showHeader();
 
 if(!empty($_GET['action'])){
     $action = $_GET['action'];
@@ -47,104 +46,95 @@ switch($params[0]){
         break;
 
     case 'register':
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $controller_user->Register();
-        }else{
-            $controller_user->showGetRegister($sesion);
-        }
-      
+        $controller_user->Register();
         break;
 
     case 'login':
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $controller_user->Login();
-        }else{
-            $controller_user->showGetLogin($sesion);
-        }
-    
+        $controller_user->Login();
         break;
 
     case 'admin':
-        if($sesion === true){
+        if($controller_user->checkLogged()=== true){
             $category = $controller_category->showCategory();
             $admin = $controller_user->ShowUser();
             $controller_news->showAdminNews($category,$admin);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
         break;
 
     //news
     case 'send-news':
-        $controller_news->showSendNews($sesion);
-        break;
-
-    case 'confirm-update-news':
-        if(isset($params[1])){
-            $category = $controller_category->showCategory();
-            $controller_news->showConfirmUpdateNews($sesion,$category,$params[1]);
-        }else{
-            header('Location:'.BASE_URL);
-        }
-      
+        $controller_news->showSendNews();
         break;
 
     case 'update-news':
-        $controller_news->showUpdateNews($sesion);
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $controller_news->showUpdateNews();
+        }else{
+            if(isset($params[1])){
+                $category = $controller_category->showCategory();
+                $controller_news->showConfirmUpdateNews($category,$params[1]);
+            }else{
+                header('Location:'.BASE_URL);
+                die();
+            }
+        }
         break;
 
     case 'confirm-delete-news':
         if(isset($params[1])){
-            $controller_news->showConfirmDeleteNews($sesion,$params[1]);
+            $controller_news->showConfirmDeleteNews($params[1]);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
-        
         break;
 
     case 'delete-news':
         if(isset($params[1])){
-            $controller_news->showDeleteNews($sesion,$params[1]);
+            $controller_news->showDeleteNews($params[1]);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
-      
         break;
   
     //category
     case 'send-category':
-        $controller_category->showSendCategory($sesion);
+        $controller_category->showSendCategory();
         break;
-
-    case 'confirm-update-category':
-        if(isset($params[1])){
-            $controller_category->showConfirmUpdateCategory($sesion,$params[1]);
-        }else{
-            header('Location:'.BASE_URL);
-        }
-      
-        break;
-        
+    
     case 'update-category':
-        $controller_category->showUpdateCategory($sesion);
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $controller_category->showUpdateCategory();
+        }else{
+            if(isset($params[1])){
+                $controller_category->showConfirmUpdateCategory($params[1]);
+            }else{
+                header('Location:'.BASE_URL);
+                die();
+            }
+        }
         break;
 
     case 'confirm-delete-category':
         if(isset($params[1])){
-            $controller_category->showConfirmDeleteCategory($sesion,$params[1]);
+            $controller_category->showConfirmDeleteCategory($params[1]);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
-      
         break;
 
     case 'delete-category':
         if(isset($params[1])){
-            $controller_category->showDeleteCategory($sesion,$params[1]);
+            $controller_category->showDeleteCategory($params[1]);
         }else{
             header('Location:'.BASE_URL);
+            die();
         }
-       
         break;
 
     case 'sing-off':

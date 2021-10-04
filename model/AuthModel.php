@@ -5,15 +5,14 @@ class AuthModel extends SQLModel{
        parent::__construct();
     }
     
-    function SingUp($email,$password){
+    function SingUp($name,$surname,$email,$password){
         try{
             $query = $this->connect->prepare('SELECT * FROM users WHERE email = ?');
             $query->execute([$email]);
             $result = $query->fetch(PDO::FETCH_OBJ);
-
             if($result === false){
-                $query = $this->connect->prepare('INSERT INTO users (email,password) VALUES (?,?)');
-                $query->execute([$email,$password]);
+                $query = $this->connect->prepare('INSERT INTO users (name,surname,email,password) VALUES (?,?,?,?)');
+                $query->execute([$name,$surname,$email,$password]);
                 return true;
             }else{
                 return false;

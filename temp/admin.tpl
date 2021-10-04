@@ -1,5 +1,5 @@
 <div id="accordion">
-   <h1>Admin: {$user->email}</h1>
+   <h1>Admin: {$user->name} {$user->surname}</h1>
     <div class="card border-secondary m-5">
  
         <div class="card-header" id="headingOne">
@@ -109,7 +109,7 @@
                           <div class="card-header">
                               <ul class="nav nav-pills card-header-pills">
                                   <li class="nav-item">
-                                      <button type="button" class="btn btn-primary"><a class="text-light" href="confirm-update-news/{$n->id}">Update</a></button>
+                                      <button type="button" class="btn btn-primary"><a class="text-light" href="update-news/{$n->id}">Update</a></button>
                                       <button type="button" class="btn btn-danger"><a class="text-light" href="confirm-delete-news/{$n->id}">Delete</a></button>
                                   </li>
                               </ul>
@@ -146,7 +146,7 @@
                             <div class="card-header">
                                 <ul class="nav nav-pills card-header-pills">
                                     <li class="nav-item">
-                                        <button type="button" class="btn btn-primary"><a class="text-light" href="confirm-update-category/{$cate->id}">Update</a></button>
+                                        <button type="button" class="btn btn-primary"><a class="text-light" href="update-category/{$cate->id}">Update</a></button>
                                         <button type="button" class="btn btn-danger"><a class="text-light" href="confirm-delete-category/{$cate->id}">Delete</a></button>
                                     </li>
                                 </ul>

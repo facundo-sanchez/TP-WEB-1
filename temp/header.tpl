@@ -31,21 +31,18 @@
                                     {/if}
                                 {/foreach}
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="admin">Admin</a>
+                                <a class="dropdown-item" href="#">Ups!</a>
                             </div>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="admin">Admin</a>
-                        </li>
-                        {if $login === false}
-                             <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
-                              <li class="nav-item"><a class="nav-link" href="register">Register</a></li>
+                        
+                        {if isset($smarty.session.user_id)}
+                         <li class="nav-item"><a class="nav-link" href="admin">Admin</a></li>
+                         <li class="nav-item"><a class="btn btn-primary" href = "sing-off">Sign off</a></li>
                         {else}
-                            <li class="nav-item"> <a class="nav-link" href="sing-off">Out</a></li> 
+                            <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="register">Register</a></li>
                         {/if}
                     </ul>
-
                 </div>
             </nav>
         </header>

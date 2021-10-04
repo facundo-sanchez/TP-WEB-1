@@ -10,9 +10,8 @@ class NewsView{
         
     }
 
-    function renderHeader($category,$sesion){
+    function renderHeader($category){
         $this->view->assign('category',$category);
-        $this->view->assign('login',$sesion);
         $this->view->display('./temp/header.tpl');
     }
 
