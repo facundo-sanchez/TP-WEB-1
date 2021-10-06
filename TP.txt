@@ -1,0 +1,1 @@
+Hacer validacion de formulario para registro y login mediante js o en php con filtrado
