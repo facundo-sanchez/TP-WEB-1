@@ -38,11 +38,7 @@ switch($params[0]){
     */
 
     case 'filter':
-        if(isset($params[1])){
-            $controller_news->showFilter($params[1]);
-        }else{
-            $controller_news->showNotFound('ERROR 404','Category not found');
-        }
+        $controller_news->showFilter($params[1]);
         break;
 
     case 'register':
