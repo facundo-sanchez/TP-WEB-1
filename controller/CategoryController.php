@@ -76,8 +76,14 @@ class CategoryController{
 
     public function showConfirmDeleteCategory($id){
         if($this->auth->VerifySession() === true){
-            $url = 'delete-category';
-            $this->view->renderConfirm($id,$url,false);
+            $category = $this->model->getCategoryID($id);
+            if($category != false){
+                $url = 'delete-category';
+                $this->view->renderConfirm($id,$url,false);
+            }else{
+                $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
+            }
+           
         }else{
             header('Location:'.BASE_URL);
             die();
@@ -91,8 +97,13 @@ class CategoryController{
                 if($undefined === false){
                     $this->view->RenderMessage('ERROR 404','Category Undefined Not Found');
                 }else{
-                    $this->model->deleteCategory($id,$undefined);
-                    $this->view->renderConfirm(0,0,true);
+                    $category = $this->model->getCategoryID($id);
+                    if($category != false){
+                        $this->model->deleteCategory($id,$undefined);
+                        $this->view->renderConfirm(0,0,true);
+                    }else{
+                        $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
+                    }
                 }
             }else{
                header('Location:'.admin);

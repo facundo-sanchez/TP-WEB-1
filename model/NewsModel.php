@@ -22,7 +22,7 @@ class NewsModel extends SQLModel{
         $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id  WHERE a.id = ?');
         $news->execute([$id]);
         $result = $news->fetch(PDO::FETCH_OBJ);
-
+        
         return $result;
     }
 

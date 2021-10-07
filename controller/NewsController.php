@@ -72,7 +72,6 @@ class NewsController{
     }
 
     public function showConfirmUpdateNews($category,$id){
-        
         if($this->auth->VerifySession() === true){
             $news = $this->model->getNewsId($id);
             if($news !=false){
@@ -106,8 +105,13 @@ class NewsController{
 
     public function showConfirmDeleteNews($id){
         if($this->auth->VerifySession() === true){
-            $url = 'delete-news';
-            $this->view->renderConfirm($id,$url,false);
+            $news = $this->model->getNewsId($id);
+            if($news !=false){
+                $url = 'delete-news';
+                $this->view->renderConfirm($id,$url,false);
+            }else{
+                $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
+            }
         }else{
             header('Location:'.BASE_URL);
             die();
@@ -117,8 +121,14 @@ class NewsController{
     public function showDeleteNews($id){
         if($this->auth->VerifySession() === true){
             if($id !=null){
-                $this->model->deleteNews($id);
-                $this->view->renderConfirm(0,0,true);
+                $news = $this->model->getNewsId($id);
+                if($news != false){
+                    var_dump($news);
+                    $this->model->deleteNews($id);
+                    $this->view->renderConfirm(0,0,true);
+                }else{
+                    $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
+                }
             }else{
                 header('Location:'.admin);
                 die();
