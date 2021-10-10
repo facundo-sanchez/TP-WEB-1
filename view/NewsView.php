@@ -68,21 +68,23 @@ class NewsView{
         $this->view->display('./temp/admin.tpl');
     }
 
-    function renderConfirmUpdateNews($news,$category){
+    function renderConfirmUpdateNews($news,$category,$success){
         $this->view->assign('news',$news);
         $this->view->assign('category',$category);
+        $this->view->assign('success',$success);
         $this->view->display('./temp/news-update.tpl');
     }
 
-    function renderConfirmUpdateCategory($category){
+    function renderConfirmUpdateCategory($category,$success){
         $this->view->assign('cate',$category);
+        $this->view->assign('success',$success);
         $this->view->display('./temp/category-update.tpl');
     }
 
     function renderConfirm($id,$url,$delete){
         $this->view->assign('delete',$delete);
         $this->view->assign('id',$id);
-        $this->view->assign('title','Delete News/Category ');
+        $this->view->assign('title','Delete News/Category');
         $this->view->assign('url',$url);
         $this->view->display('./temp/confirm.tpl');
     }

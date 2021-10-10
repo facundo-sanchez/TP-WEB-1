@@ -46,7 +46,7 @@ class CategoryController{
         if($this->auth->VerifySession() === true){
             $category = $this->model->getCategoryID($id);
             if($category != false){
-                $this->view->renderConfirmUpdateCategory($category);
+                $this->view->renderConfirmUpdateCategory($category,false);
             }else{
                 $this->view->RenderMessage('ERROR 404','Category not found');
             }
@@ -60,10 +60,17 @@ class CategoryController{
     public function showUpdateCategory(){
         if($this->auth->VerifySession() === true){
             if(!empty($_POST)){
-                $id_category = $_POST['id_category'];
-                $title_category = $_POST['title_category'];
-                $description_category = $_POST['description_category'];
-                $this->model->updateCategory($id_category,$title_category,$description_category);
+                if(filter_var($_POST['id_category'],FILTER_VALIDATE_INT)){
+                    $id_category = $_POST['id_category'];
+                    $title_category = $_POST['title_category'];
+                    $description_category = $_POST['description_category'];
+                    $this->model->updateCategory($id_category,$title_category,$description_category);
+                    $category = $this->model->getCategoryID($id_category);
+                    $this->view->renderConfirmUpdateCategory($category,true);
+                }else{
+                    $this->view->RenderMessage('ERROR ID','Try it again later');
+                }
+               
             }else{
                header('Location:'.admin);
                die();

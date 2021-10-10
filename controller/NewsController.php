@@ -75,7 +75,7 @@ class NewsController{
         if($this->auth->VerifySession() === true){
             $news = $this->model->getNewsId($id);
             if($news !=false){
-                $this->view->renderConfirmUpdateNews($news,$category);
+                $this->view->renderConfirmUpdateNews($news,$category,false);
             }else{
                 $this->view->RenderMessage('ERROR 404','News not found');
             }
@@ -88,11 +88,18 @@ class NewsController{
     public function showUpdateNews(){
         if($this->auth->VerifySession() === true){
             if(!empty($_POST)){
-                $id_news = $_POST['id_news'];
-                $title_news = $_POST['title_news'];
-                $category_news = $_POST['category_news'];
-                $description_news = $_POST['description_news'];
-                $this->model->updateNews($id_news,$title_news,$category_news,$description_news); 
+                if(filter_var($_POST['id_news'],FILTER_VALIDATE_INT)){
+                    $id_news = $_POST['id_news'];
+                    $title_news = $_POST['title_news'];
+                    $category_news = $_POST['category_news'];
+                    $description_news = $_POST['description_news'];
+                    $this->model->updateNews($id_news,$title_news,$category_news,$description_news);
+                    $news = $this->model->getNewsId($id_news);
+                    $this->view->renderConfirmUpdateNews($news,null,true);
+                }else{
+                    $this->view->RenderMessage('ERROR ID','Try it again later');
+                }
+               
             }else{
                 header('Location:'.admin);
                 die();

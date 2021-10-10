@@ -24,15 +24,17 @@ class AuthController{
     }
 
     public function Register(){
+        //VALIDAR REGISTRO
+        
         if($this->auth->VerifySession()=== false){
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if(!empty($_POST)){
                     $name = $_POST['user_name'];
                     $surname = $_POST['user_surname'];
-                    $email = $_POST['user_email'];
+                    $email = filter_var($_POST['user_email'],FILTER_SANITIZE_EMAIL);
                     $password = password_hash($_POST['user_pass'],PASSWORD_BCRYPT);
                     $repeat_password = $_POST['user_repeat_pass'];
-    
+                   
                     if(password_verify($repeat_password,$password)){
                         $validate = $this->model->SingUp($name,$surname,$email,$password);
                       
@@ -43,8 +45,7 @@ class AuthController{
                         }
                     }else{
                         $this->view->renderRegister(true);
-                    }
-                   
+                    }       
                 }else{
                     header('Location:'.BASE_URL);
                     die();
@@ -55,18 +56,16 @@ class AuthController{
         }else{
             header('Location:'.admin);
             die();
-        }
-        
-       
+        }   
     }
 
     public function Login(){
+        //VALIDAR LOGIN
         if($this->auth->VerifySession() === false){
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if(!empty($_POST)){
-                    $email = $_POST['user_email'];
+                    $email = filter_var($_POST['user_email'],FILTER_SANITIZE_EMAIL);
                     $password = $_POST['user_pass'];
-            
                     $user_data = $this->model->UserLogin($email);
                 
                     if($user_data && password_verify ($password,($user_data->password))){
