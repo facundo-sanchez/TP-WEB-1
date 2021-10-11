@@ -130,7 +130,6 @@ class NewsController{
             if($id !=null){
                 $news = $this->model->getNewsId($id);
                 if($news != false){
-                    var_dump($news);
                     $this->model->deleteNews($id);
                     $this->view->renderConfirm(0,0,true);
                 }else{

@@ -21,7 +21,7 @@
     </form>
     {if $error === true}
         <div class="alert alert-danger" role="alert">
-            Email or password to incorrect!
+            {$msg}
         </div>
     {/if}
 </article>

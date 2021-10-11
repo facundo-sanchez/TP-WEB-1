@@ -31,7 +31,7 @@
   </div>
     {if $error === true}
         <div class="alert alert-danger" role="alert">
-            Email already registered! or Passwords do not match!
+          {$msg}
         </div>
     {elseif $error === false}
         <div class="alert alert-success" role="alert">

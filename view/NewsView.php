@@ -7,7 +7,6 @@ class NewsView{
 
     function __construct(){
        $this->view = new Smarty();
-        
     }
 
     function renderHeader($category){
@@ -48,17 +47,15 @@ class NewsView{
     }
 
     //access private
-    function renderRegister($error){
+    function renderRegister($error,$msg){
         $this->view->assign('error',$error);
+        $this->view->assign('msg',$msg);
         $this->view->display('./temp/register.tpl');
     }
-    function renderLogin($error){
+    function renderLogin($error,$msg){
         $this->view->assign('error',$error);
+        $this->view->assign('msg',$msg);
         $this->view->display('./temp/login.tpl');
-    }
-
-    function showOut(){
-
     }
 
     function renderAdmin($news,$category,$admin){
