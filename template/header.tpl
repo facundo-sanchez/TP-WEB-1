@@ -43,6 +43,12 @@
                             <li class="nav-item"><a class="nav-link" href="register">Register</a></li>
                         {/if}
                     </ul>
+                     {if isset($smarty.session.user_id)}
+                       <ul class="navbar-nav ">
+                        <!--TP-2 PARA CONFIGURACION DE USUARIO.-->
+                            <li class="nav-item"><a class="nav-link" href="admin">Welcome {$smarty.session.name} {$smarty.session.surname}</a></li>
+                        </ul>
+                     {/if}
                 </div>
             </nav>
         </header>
