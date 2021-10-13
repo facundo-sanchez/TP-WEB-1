@@ -10,32 +10,43 @@ class NewsModel extends SQLModel{
     
     //public acccess
     function getNews(){
-        //SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN category b ON a.id_category = b.id
-        $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id');
-        $news->execute();
-        $result = $news->fetchAll(PDO::FETCH_OBJ);
-
-        return $result;
+        try{
+            //SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN category b ON a.id_category = b.id
+            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id');
+            $news->execute();
+            $result = $news->fetchAll(PDO::FETCH_OBJ);
+    
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
     }
 
     function getNewsId($id){
-        $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id  WHERE a.id = ?');
-        $news->execute([$id]);
-        $result = $news->fetch(PDO::FETCH_OBJ);
-        
-        return $result;
+        try{
+            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id  WHERE a.id = ?');
+            $news->execute([$id]);
+            $result = $news->fetch(PDO::FETCH_OBJ);
+            
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
     }
 
     function getFilter($id){
-        $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = ?');
-        $category->execute([$id]);
-        $result = $category->fetchAll(pdo::FETCH_OBJ);
-        
-        return $result;
+        try{
+            $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = ?');
+            $category->execute([$id]);
+            $result = $category->fetchAll(pdo::FETCH_OBJ);
+            
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
     }
     
     //access private
-
     //News ABM
     function sendNews($title,$category,$description){
         try{

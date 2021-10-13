@@ -9,19 +9,29 @@ class CategoryModel extends SQLModel{
     }
 
     function getCategory(){
-        $category = $this->connect->prepare('SELECT * FROM categories');
-        $category->execute();
-        $result = $category->fetchAll(PDO::FETCH_OBJ);
-
-        return $result;
+        try{
+            $category = $this->connect->prepare('SELECT * FROM categories');
+            $category->execute();
+            $result = $category->fetchAll(PDO::FETCH_OBJ);
+    
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
     }
+
     function getCategoryID($id){
-        $category = $this->connect->prepare('SELECT * FROM categories where id = ?');
-        $category->execute([$id]);
-        $result = $category->fetch(PDO::FETCH_OBJ);
+        try{
+            $category = $this->connect->prepare('SELECT * FROM categories where id = ?');
+            $category->execute([$id]);
+            $result = $category->fetch(PDO::FETCH_OBJ);
 
-        return $result;
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
     }
+
     function sendCategory($category,$description){
         try{
          $query = $this->connect->prepare('INSERT INTO categories (category,description) VALUES (?,?)');
@@ -30,7 +40,6 @@ class CategoryModel extends SQLModel{
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();
         }
-
     }
 
     function updateCategory($id,$title,$description){
@@ -39,9 +48,9 @@ class CategoryModel extends SQLModel{
             $query->execute([$title,$description,$id]);
         }catch(Exception $e){
             echo 'ERRRO'.$e->getMessage();
-        }
-        
+        }   
     }
+
     function getUndefined(){
         $query = $this->connect->prepare('SELECT * FROM categories WHERE category = ?');
         $query->execute(['Undefined']);
@@ -60,7 +69,6 @@ class CategoryModel extends SQLModel{
             
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();
-        }
-        
+        }  
     }
 }
