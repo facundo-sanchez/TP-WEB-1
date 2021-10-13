@@ -37,9 +37,9 @@ class AuthController{
                         $this->view->renderRegister(true,'First or Last name exceeds character limits');
                     }else if(strlen($email) >255 || strlen($password) >255){
                         $this->view->renderRegister(true,'Email or Password exceed the character limits');
-                    }else{
+                    }else if(filter_var($email,FILTER_VALIDATE_EMAIL)){
                         if(password_verify($repeat_password,$password)){
-                            $validate = $this->model->SingUp($name,$surname,$email,$password);
+                            $validate = $this->model->SingUp($name,$surname,strtolower($email),$password);
                           
                             if($validate === false){
                                 $this->view->renderRegister(true,'Email already registered!');
@@ -49,6 +49,8 @@ class AuthController{
                         }else{
                             $this->view->renderRegister(true,'Passwords do not match!');
                         }  
+                    }else{
+                        $this->view->renderRegister(true,'Email incorrect');
                     }
                 }else{
                     header('Location:'.BASE_URL);
