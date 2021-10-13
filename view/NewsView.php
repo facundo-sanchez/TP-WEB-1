@@ -83,6 +83,6 @@ class NewsView{
         $this->view->assign('id',$id);
         $this->view->assign('title','Delete News/Category');
         $this->view->assign('url',$url);
-        $this->view->display('./template/confirm.tpl');
+        $this->view->display('./template/confirm-delete.tpl');
     }
 }
