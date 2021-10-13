@@ -30,11 +30,15 @@ class NewsController{
     }
 
     public function showNews($id){
-        $news = $this->model->getNewsId($id);
-        if($news === false){
-            $this->view->RenderMessage('ERROR 404','Not found news');
+        if(filter_var($id,FILTER_VALIDATE_INT)){
+            $news = $this->model->getNewsId($id);
+            if($news === false){
+                $this->view->RenderMessage('ERROR 404','Not found news');
+            }else{
+                $this->view->renderNews($news);
+            }
         }else{
-            $this->view->renderNews($news);
+            $this->view->RenderMessage('ERROR 404','Not found news');
         }
     }
 
