@@ -116,9 +116,6 @@ class CategoryController{
                header('Location:'.admin);
                die();
             }
-        }else{
-            header('Location:'.BASE_URL);
-            die();
         }
     }
     /*

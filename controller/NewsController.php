@@ -143,10 +143,6 @@ class NewsController{
                 header('Location:'.admin);
                 die();
             }
-        }else{
-            header('Location:'.BASE_URL);
-            die();
         }
     } 
-
 }

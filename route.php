@@ -89,8 +89,12 @@ switch($params[0]){
         break;
 
     case 'delete-news':
-        $controller_news->showDeleteNews($params[1]);
-
+        if(isset($params[1])){
+            $controller_news->showDeleteNews($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
         break;
   
     //category
@@ -121,7 +125,13 @@ switch($params[0]){
         break;
 
     case 'delete-category':
-        $controller_category->showDeleteCategory($params[1]);
+        if(isset($params[1])){
+            $controller_category->showDeleteCategory($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+       
         break;
 
     case 'sing-off':
