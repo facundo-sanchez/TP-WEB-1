@@ -17,7 +17,6 @@ class AuthModel extends SQLModel{
             }else{
                 return false;
             }
-          
         }catch(Exception $e){
             echo 'ERROR:'.$e->getMessage();
         }
@@ -25,16 +24,13 @@ class AuthModel extends SQLModel{
     }
 
     function UserLogin($email){
-        //user login
         try{
             $query = $this->connect->prepare('SELECT * FROM users WHERE email = ?');
             $query->execute([$email]);
             $user = $query->fetch(PDO::FETCH_OBJ);
+            return $user;
         }catch(Exception $e){
             echo 'ERROR '.$e->getMessage();
         }
-      
-        
-        return $user;
     }
 }

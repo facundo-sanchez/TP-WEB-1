@@ -36,7 +36,6 @@ class CategoryModel extends SQLModel{
         try{
          $query = $this->connect->prepare('INSERT INTO categories (category,description) VALUES (?,?)');
          $query->execute([$category,$description]);
-
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();
         }
