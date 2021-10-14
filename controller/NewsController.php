@@ -70,7 +70,7 @@ class NewsController{
                 die();
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -84,7 +84,7 @@ class NewsController{
                 $this->view->RenderMessage('ERROR 404','News not found');
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -109,7 +109,7 @@ class NewsController{
                 die();
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -124,7 +124,7 @@ class NewsController{
                 $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -143,6 +143,10 @@ class NewsController{
                 header('Location:'.admin);
                 die();
             }
+        }else{
+            header('Location:'.login);
+            die();
         }
     } 
+
 }

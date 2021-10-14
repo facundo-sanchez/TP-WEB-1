@@ -28,9 +28,15 @@ switch($params[0]){
         break;
         
     case 'news':
-        $controller_news->showNews($params[1]);
+        if(isset($params[1])){
+            $controller_news->showNews($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+      
         break;
-
+        
     /*
     case 'category':
         $controller->showCategory();

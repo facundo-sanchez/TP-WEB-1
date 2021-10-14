@@ -37,7 +37,7 @@ class CategoryController{
                 die();
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -51,7 +51,7 @@ class CategoryController{
                 $this->view->RenderMessage('ERROR 404','Category not found');
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
 
@@ -76,7 +76,7 @@ class CategoryController{
                die();
             }
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -92,7 +92,7 @@ class CategoryController{
             }
            
         }else{
-            header('Location:'.BASE_URL);
+            header('Location:'.login);
             die();
         }
     }
@@ -116,6 +116,9 @@ class CategoryController{
                header('Location:'.admin);
                die();
             }
+        }else{
+            header('Location:'.login);
+            die();
         }
     }
     /*
