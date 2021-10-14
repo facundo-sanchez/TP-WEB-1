@@ -15,7 +15,7 @@ class AuthController{
     }
 
     public function checkLogged(){
-       return  $this->auth->VerifySession();
+        $this->auth->checkLoggedIn();
     }
 
     public function ShowUser(){

@@ -62,14 +62,11 @@ switch($params[0]){
         break;
 
     case 'admin':
-        if($controller_user->checkLogged()=== true){
-            $category = $controller_category->showCategory();
-            $admin = $controller_user->ShowUser();
-            $controller_news->showAdminNews($category,$admin);
-        }else{
-            header('Location:'.BASE_URL);
-            die();
-        }
+        $controller_user->checkLogged();
+        $category = $controller_category->showCategory();
+        $admin = $controller_user->ShowUser();
+        $controller_news->showAdminNews($category,$admin);
+   
         break;
 
     //news

@@ -12,7 +12,14 @@ class AuthHelper{
         }
         return false;
     }
-      
+
+    public function checkLoggedIn() {
+        if (empty($_SESSION['user_id'])) {
+            header('Location:'.login);
+            die();
+        }
+    }
+ 
     public function SingOff(){
         session_unset();
         session_destroy();

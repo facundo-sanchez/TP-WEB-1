@@ -59,94 +59,78 @@ class NewsController{
 
     //News
     public function showSendNews(){
-        if($this->auth->VerifySession() === true){
-            if(!empty($_POST)){
-                $title = $_POST['title_news'];
-                $category = $_POST['category_news'];
-                $description = $_POST['description_news'];
-                $this->model->sendNews($title,$category,$description);
-            }else{
-                header('Location:'.admin);
-                die();
-            }
+        $this->auth->checkLoggedIn();
+        if(!empty($_POST)){
+            $title = $_POST['title_news'];
+            $category = $_POST['category_news'];
+            $description = $_POST['description_news'];
+            $this->model->sendNews($title,$category,$description);
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
-        }
+        } 
     }
 
     public function showConfirmUpdateNews($category,$id){
-        if($this->auth->VerifySession() === true){
-            $news = $this->model->getNewsId($id);
-            if($news !=false){
-                $this->view->renderConfirmUpdateNews($news,$category,false);
-            }else{
-                $this->view->RenderMessage('ERROR 404','News not found');
-            }
+        $this->auth->checkLoggedIn();
+        $news = $this->model->getNewsId($id);
+        if($news !=false){
+            $this->view->renderConfirmUpdateNews($news,$category,false);
         }else{
-            header('Location:'.login);
-            die();
+            $this->view->RenderMessage('ERROR 404','News not found');
         }
+      
     }
 
     public function showUpdateNews(){
-        if($this->auth->VerifySession() === true){
-            if(!empty($_POST)){
-                if(filter_var($_POST['id_news'],FILTER_VALIDATE_INT)){
-                    $id_news = $_POST['id_news'];
-                    $title_news = $_POST['title_news'];
-                    $category_news = $_POST['category_news'];
-                    $description_news = $_POST['description_news'];
-                    $this->model->updateNews($id_news,$title_news,$category_news,$description_news);
-                    $news = $this->model->getNewsId($id_news);
-                    $this->view->renderConfirmUpdateNews($news,null,true);
-                }else{
-                    $this->view->RenderMessage('ERROR ID','Try it again later');
-                }
-               
+        $this->auth->checkLoggedIn();
+        if(!empty($_POST)){
+            if(filter_var($_POST['id_news'],FILTER_VALIDATE_INT)){
+                $id_news = $_POST['id_news'];
+                $title_news = $_POST['title_news'];
+                $category_news = $_POST['category_news'];
+                $description_news = $_POST['description_news'];
+                $this->model->updateNews($id_news,$title_news,$category_news,$description_news);
+                $news = $this->model->getNewsId($id_news);
+                $this->view->renderConfirmUpdateNews($news,null,true);
             }else{
-                header('Location:'.admin);
-                die();
+                $this->view->RenderMessage('ERROR ID','Try it again later');
             }
+               
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
-        }
+        }    
+        
     }
 
     public function showConfirmDeleteNews($id){
-        if($this->auth->VerifySession() === true){
+        $this->auth->checkLoggedIn();
+        $news = $this->model->getNewsId($id);
+        if($news !=false){
+            $url = 'delete-news';
+            $this->view->renderConfirm($id,$url,false);
+        }else{
+            $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
+        }
+      
+    }
+
+    public function showDeleteNews($id){
+        $this->auth->checkLoggedIn();
+        if($id !=null){
             $news = $this->model->getNewsId($id);
-            if($news !=false){
-                $url = 'delete-news';
-                $this->view->renderConfirm($id,$url,false);
+            if($news != false){
+                $this->model->deleteNews($id);
+                $this->view->renderConfirm(0,0,true);
             }else{
                 $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
             }
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
         }
-    }
-
-    public function showDeleteNews($id){
-        if($this->auth->VerifySession() === true){
-            if($id !=null){
-                $news = $this->model->getNewsId($id);
-                if($news != false){
-                    $this->model->deleteNews($id);
-                    $this->view->renderConfirm(0,0,true);
-                }else{
-                    $this->view->RenderMessage('ERROR 404','NEWS NOT FOUND');
-                }
-            }else{
-                header('Location:'.admin);
-                die();
-            }
-        }else{
-            header('Location:'.login);
-            die();
-        }
+      
     } 
 
 }

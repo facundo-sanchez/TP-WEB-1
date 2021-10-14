@@ -18,6 +18,7 @@ class CategoryController{
 
     public function showCategory(){
         $category = $this->model->getCategory();
+
         return $category;
     }
 
@@ -27,99 +28,78 @@ class CategoryController{
     }
 
     public function showSendCategory(){
-        if($this->auth->VerifySession() === true){
-            if(!empty($_POST)){
-                $category = $_POST['title_category'];
-                $description = $_POST['description_category'];
-                $this->model->sendCategory($category,$description);
-            }else{
-                header('Location:'.admin);
-                die();
-            }
+        $this->auth->checkLoggedIn();
+        if(!empty($_POST)){
+            $category = $_POST['title_category'];
+            $description = $_POST['description_category'];
+            $this->model->sendCategory($category,$description);
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
         }
     }
 
     public function showConfirmUpdateCategory($id){
-        if($this->auth->VerifySession() === true){
-            $category = $this->model->getCategoryID($id);
-            if($category != false){
-                $this->view->renderConfirmUpdateCategory($category,false);
-            }else{
-                $this->view->RenderMessage('ERROR 404','Category not found');
-            }
+        $this->auth->checkLoggedIn();
+        $category = $this->model->getCategoryID($id);
+        if($category != false){
+            $this->view->renderConfirmUpdateCategory($category,false);
         }else{
-            header('Location:'.login);
-            die();
+            $this->view->RenderMessage('ERROR 404','Category not found');
         }
-
     }
 
     public function showUpdateCategory(){
-        if($this->auth->VerifySession() === true){
-            if(!empty($_POST)){
-                if(filter_var($_POST['id_category'],FILTER_VALIDATE_INT)){
-                    $id_category = $_POST['id_category'];
-                    $title_category = $_POST['title_category'];
-                    $description_category = $_POST['description_category'];
-                    $this->model->updateCategory($id_category,$title_category,$description_category);
-                    $category = $this->model->getCategoryID($id_category);
-                    $this->view->renderConfirmUpdateCategory($category,true);
+        $this->auth->checkLoggedIn();
+        if(!empty($_POST)){
+            if(filter_var($_POST['id_category'],FILTER_VALIDATE_INT)){
+                $id_category = $_POST['id_category'];
+                $title_category = $_POST['title_category'];
+                $description_category = $_POST['description_category'];
+                $this->model->updateCategory($id_category,$title_category,$description_category);
+                $category = $this->model->getCategoryID($id_category);
+                $this->view->renderConfirmUpdateCategory($category,true);
                 }else{
                     $this->view->RenderMessage('ERROR ID','Try it again later');
-                }
-               
-            }else{
-               header('Location:'.admin);
-               die();
-            }
+                }      
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
         }
     }
 
     public function showConfirmDeleteCategory($id){
-        if($this->auth->VerifySession() === true){
-            $category = $this->model->getCategoryID($id);
-            if($category != false){
-                $url = 'delete-category';
-                $this->view->renderConfirm($id,$url,false);
-            }else{
-                $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
-            }
-           
+        $this->auth->checkLoggedIn();
+        $category = $this->model->getCategoryID($id);
+        if($category != false){
+            $url = 'delete-category';
+            $this->view->renderConfirm($id,$url,false);
         }else{
-            header('Location:'.login);
-            die();
+            $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
         }
+           
     }
 
     public function showDeleteCategory($id){
-        if($this->auth->VerifySession() === true){
-            if ($id != null){
-                $undefined = $this->model->getUndefined();
-                if($undefined === false){
-                    $this->view->RenderMessage('ERROR 404','Category Undefined Not Found');
-                }else{
-                    $category = $this->model->getCategoryID($id);
-                    if($category != false){
-                        $this->model->deleteCategory($id,$undefined);
-                        $this->view->renderConfirm(0,0,true);
-                    }else{
-                        $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
-                    }
-                }
+        $this->auth->checkLoggedIn();
+        if ($id != null){
+            $undefined = $this->model->getUndefined();
+            if($undefined === false){
+                $this->view->RenderMessage('ERROR 404','Category Undefined Not Found');
             }else{
-               header('Location:'.admin);
-               die();
+                $category = $this->model->getCategoryID($id);
+                if($category != false){
+                $this->model->deleteCategory($id,$undefined);
+                $this->view->renderConfirm(0,0,true);
+                }else{
+                    $this->view->RenderMessage('ERROR 404','CATEGORY NOT FOUND');
+                }
             }
         }else{
-            header('Location:'.login);
+            header('Location:'.admin);
             die();
         }
+
     }
     /*
     public function showCategory(){
