@@ -15,6 +15,25 @@ header {
 
 main {
     grid-area: main;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'main' 'pagination';
+}
+
+.pagination-news {
+    grid-area: pagination;
+    grid-template-columns: 1fr;
+    justify-self: center;
+}
+
+.nav-pagination {
+    margin: auto;
+}
+
+.content-main {
+    display: grid;
+    grid-area: main;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 footer {
@@ -22,7 +41,12 @@ footer {
     margin-top: 15%;
 }
 
-.content-main {
+.content-main-users {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.content-news-admin {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 }
