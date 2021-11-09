@@ -14,6 +14,11 @@ class AuthController{
         $this->auth = new AuthHelper();
     }
 
+    public function getUsers(){
+        $users = $this->model->getUsers($_SESSION['user_id']);
+        return $users;
+    }
+
     public function checkLogged(){
         $this->auth->checkLoggedIn();
     }
@@ -60,7 +65,7 @@ class AuthController{
                 $this->view->renderRegister(null,null);
             }
         }else{
-            header('Location:'.admin);
+            header('Location:'.BASE_URL);
             die();
         }   
     }
@@ -79,13 +84,14 @@ class AuthController{
                         $user_data = $this->model->UserLogin($email);
                         if($user_data && password_verify ($password,($user_data->password))){
                             $_SESSION['login'] = true;
+                            $_SESSION['role'] = $user_data->role;
                             $_SESSION['user_id'] = $user_data->id;
                             $_SESSION['name'] = $user_data->name;
                             $_SESSION['surname'] = $user_data->surname;
                             $_SESSION['email'] = $user_data->email;
                             $_SESSION['password'] = $user_data->password;
-                            
-                            header('Location:'.admin);
+                          
+                            header('Location:'.BASE_URL);
                             die();
                         }else{
                             $this->view->renderLogin(true,'Email or Password to incorrect!');  
@@ -100,9 +106,62 @@ class AuthController{
                 $this->view->renderLogin(null,null);
             }
         }else{
-            header('Location:'.admin);
+            header('Location:'.BASE_URL);
             die();
         }
+    }
+    public function userAdminRole($id,$option){
+        $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
+        $users = $this->model->getUsersId($id);
+
+        if($users != false){
+            if($option == 'update'){
+                $this->model->userAdmin($id);
+                $this->view->RenderMessage('Success','Admin added');
+            }elseif($option == 'remove'){
+                $this->model->userDeleteAdmin($id);
+                $this->view->RenderMessage('Success','Admin removed');
+            }else{
+                $this->view->RenderMessage('ERROR','Option not found');
+            }
+            
+        }else{
+            echo 'error';
+        }
+      
+    }
+    public function showConfirmDeleteUser($id){
+        $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
+        if($id != $_SESSION['user_id']){
+            $users = $this->model->getUsersId($id);
+            if($users != false){
+                $url = 'delete-users';
+                $this->view->renderConfirm($id,$url,false);
+            }else{
+                $this->view->RenderMessage('ERROR','User not found');
+            }
+        }else{
+            $this->view->RenderMessage('ERROR','User no deleted');
+        }
+    }
+
+    public function userDelete($id){
+        $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
+        if($id != $_SESSION['user_id']){
+            $users = $this->model->getUsersId($id);
+            if($users != false){
+                $this->model->userDelete($id);
+                $this->view->renderConfirm(0,0,true);
+            }else{
+                $this->view->RenderMessage('ERROR','User no deleted');
+            }
+        }else{
+            $this->view->RenderMessage('ERROR','User no deleted');
+        }
+        
     }
     
     public function SingOff(){

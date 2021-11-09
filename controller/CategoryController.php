@@ -29,6 +29,7 @@ class CategoryController{
 
     public function showSendCategory(){
         $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         if(!empty($_POST)){
             $category = $_POST['title_category'];
             $description = $_POST['description_category'];
@@ -41,6 +42,7 @@ class CategoryController{
 
     public function showConfirmUpdateCategory($id){
         $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         $category = $this->model->getCategoryID($id);
         if($category != false){
             $this->view->renderConfirmUpdateCategory($category,false);
@@ -51,6 +53,7 @@ class CategoryController{
 
     public function showUpdateCategory(){
         $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         if(!empty($_POST)){
             if(filter_var($_POST['id_category'],FILTER_VALIDATE_INT)){
                 $id_category = $_POST['id_category'];
@@ -70,6 +73,7 @@ class CategoryController{
 
     public function showConfirmDeleteCategory($id){
         $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         $category = $this->model->getCategoryID($id);
         if($category != false){
             $url = 'delete-category';
@@ -82,6 +86,7 @@ class CategoryController{
 
     public function showDeleteCategory($id){
         $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         if ($id != null){
             $undefined = $this->model->getUndefined();
             if($undefined === false){

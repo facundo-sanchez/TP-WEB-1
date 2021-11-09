@@ -14,8 +14,10 @@ class NewsView{
         $this->view->display('./template/header.tpl');
     }
 
-    function renderHome($news){
+    function renderHome($news,$page,$page_count){
         $this->view->assign('news',$news);
+        $this->view->assign('page',$page);
+        $this->view->assign('page_count',$page_count);
         $this->view->display('./template/news.tpl');
        
     }
@@ -35,7 +37,7 @@ class NewsView{
 
     function renderFilter($category){
         $this->view->assign('news',$category);
-        $this->view->display('./template/news.tpl');
+        $this->view->display('./template/filter_category.tpl');
        
     }
 
@@ -58,9 +60,12 @@ class NewsView{
         $this->view->display('./template/login.tpl');
     }
 
-    function renderAdmin($news,$category,$admin){
+    function renderAdmin($news,$category,$admin,$users,$page,$page_count){
         $this->view->assign('news',$news);
         $this->view->assign('user',$admin);
+        $this->view->assign('users',$users);
+        $this->view->assign('page',$page);
+        $this->view->assign('page_count',$page_count);
         $this->view->assign('category',$category);
         $this->view->display('./template/admin.tpl');
     }
