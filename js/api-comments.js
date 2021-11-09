@@ -1,8 +1,5 @@
 "use strict"
 
-
-
-
 let app = new Vue({
     el: '#comments',
     data: {
@@ -11,7 +8,11 @@ let app = new Vue({
 });
 
 
-let form = document.querySelector('#form').addEventListener('submit', addComments);
+let form = document.querySelector('#form');
+if (form != null) {
+    form.addEventListener('submit', addComments);
+}
+
 document.querySelector('#filter_delete').addEventListener('click', getComments);
 
 let btn_data_filter = document.querySelectorAll('.dropdown-item');
@@ -27,7 +28,6 @@ function filter(e) {
     } else {
         let order = e.target.dataset.order;
         let option = e.target.dataset.option;
-        console.log(order + ' ' + option);
         orderComments(order, option);
     }
 }
@@ -45,16 +45,13 @@ async function getComments() {
         const json = await response.json();
         if (response.ok) {
             app.comments = json;
-
+            setTimeout(dataDelete, 100);
         }
 
     } catch (error) {
         console.log(error);
         show_danger_filter();
     }
-    setTimeout(dataDelete, 100);
-
-
 }
 
 async function addComments(e) {
@@ -105,7 +102,6 @@ async function deleteComments(e) {
                 } else {
                     getComments();
                 }
-
             }
         } catch (error) {
             console.log(error)
@@ -113,19 +109,18 @@ async function deleteComments(e) {
         }
     }
 }
+
 async function filterComments(data) {
     hide_danger_filter()
     const urlParams = window.location.href;
     let params = urlParams.split('/');
     const API_URL_FILTER = 'api/comments/filter/' + params[5] + '/' + data;
-    console.log(API_URL_FILTER);
     app.comments = [];
-    console.log(app.comments);
+
     try {
         const response = await fetch(API_URL_FILTER);
         if (response.ok) {
             const json = await response.json();
-            console.log(json);
             app.comments = json;
             show_warning_filter();
             setTimeout(dataDelete, 100);
@@ -155,7 +150,7 @@ async function orderComments(order, option) {
     }
 }
 
-function dataDelete(e) {
+function dataDelete() {
     let btn_data_delete = document.querySelectorAll('button');
 
     for (const btn of btn_data_delete) {
@@ -182,4 +177,5 @@ function hide_danger_filter() {
     document.querySelector('#filter_not_found').classList.remove('d-block');
     document.querySelector('#filter_not_found').classList.add('d-none');
 }
+
 getComments();

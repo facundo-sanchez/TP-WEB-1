@@ -17,7 +17,7 @@
           </blockquote>
         </div>
 </div>
-
+{if isset($smarty.session.user_id)}
   <div class='card m-5'>
   <form id='form'>
     <div class="form-group m-2">
@@ -41,6 +41,8 @@
     </div>
   </form>
 </div>
+{/if}
+  
 
 
 

@@ -18,7 +18,7 @@ class NewsView{
         $this->view->assign('news',$news);
         $this->view->assign('page',$page);
         $this->view->assign('page_count',$page_count);
-        $this->view->display('./template/news.tpl');
+        $this->view->display('./template/home.tpl');
        
     }
 

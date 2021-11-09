@@ -24,7 +24,6 @@ Como administrador del sitio, quiero poder asociar una imagen a un ítem. ✓
 Las imágenes de los “ítems” se deben poder subir y eliminar desde el ABM de los mismos. 
 
 Como usuario quiero poder navegar los listados de ítems en forma paginada. ✓
-Se debe generar una paginación del lado del servidor para recorrer los listados en forma paginada. (Se recomienda empezar con “anterior” y “siguiente”)
 
 Como usuario quiero poder realizar búsquedas avanzadas de los ítems. ✓ 
 Se debe incluir un formulario de búsquedas avanzadas donde se filtren los ítems dependiendo de los atributos internos. Esta búsqueda se debe resolver del lado del servidor.
