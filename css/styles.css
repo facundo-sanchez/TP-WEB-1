@@ -66,6 +66,18 @@ footer {
     text-align: center;
 }
 
+.comments {
+    padding: 10px;
+}
+
+.comments-card {
+    margin-top: 1%;
+}
+
+.comments div {
+    padding: 5px;
+}
+
 .m-1 {
     margin: auto;
     background-color: aquamarine;

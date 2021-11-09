@@ -79,11 +79,19 @@
   <!--Comentarios-->
 
   {literal}
-    <ul class="list-group" id = 'comments'>
-      <li v-for='c in comments' class="list-group-item" v-bind:data-id='c.id'>{{c.comment}} || {{c.points}}
-        <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
-      </li>
-    </ul>
+
+    <article class='comments' id = 'comments'>
+      <div class="card comments-card" v-for='c in comments'>
+        <div class="card-header" style="height: 50px;">
+        <p>Points: <strong>{{c.points}}</strong> Date: <strong>{{c.date}}</strong></p>      
+        </div>
+        <div class="card-body">
+          {{c.comment}}
+          <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
+        </div>
+      </div>
+    </article>
+    
   {/literal}
 
 </div>
