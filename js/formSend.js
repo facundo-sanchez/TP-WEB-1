@@ -1,36 +1,21 @@
 'use strict'
 
-document.querySelector('#formsend-news').addEventListener('submit', send_news);
+//document.querySelector('#formsend-news').addEventListener('submit', send_news);
 document.querySelector('#formsend-category').addEventListener('submit', send_category);
-
-document.querySelector('#category-button').addEventListener('click', form_category);
-document.querySelector('#news-button').addEventListener('click', form_news);
-
-function form_category() {
-    document.querySelector('#news-button').classList.remove('active');
-    document.querySelector('#category-button').classList.add('active');
-    document.querySelector('#formsend-news').classList.remove('d-block');
-    document.querySelector('#formsend-news').classList.add('d-none');
-    document.querySelector('#formsend-category').classList.remove('d-none');
-    document.querySelector('#formsend-category').classList.add('d-block');
-}
-
-function form_news() {
-    document.querySelector('#category-button').classList.remove('active');
-    document.querySelector('#news-button').classList.add('active');
-    document.querySelector('#formsend-category').classList.remove('d-block');
-    document.querySelector('#formsend-category').classList.add('d-none');
-    document.querySelector('#formsend-news').classList.remove('d-none');
-    document.querySelector('#formsend-news').classList.add('d-block');
-}
-
+/*
 function send_news(e) {
     e.preventDefault();
     const data = new URLSearchParams(new FormData(this));
+    let news = {
+        title: data.get('title_news'),
+        img: data.get('input_file'),
+        description: data.get('description_news'),
+        id_category: ('category_news')
+    }
     const url = 'send-news';
     server(data, url, true);
 }
-
+*/
 function send_category(e) {
     e.preventDefault();
     const data = new URLSearchParams(new FormData(this));

@@ -40,7 +40,7 @@
                 <p class="lead">The news ID:#{$news->id} Title:{$news->title} was updated</p>
                 <hr class="my-4">
                 <p class="lead">
-                    <a class="btn btn-primary btn-lg" href="admin" role="button">Go Admin</a>
+                    <a class="btn btn-primary btn-lg" href="admin/" role="button">Go Admin</a>
                 </p>
             </div>
         {/if}

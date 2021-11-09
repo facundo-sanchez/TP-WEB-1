@@ -28,7 +28,7 @@
             <p class="lead">The Category ID:#{$cate->id} Title:{$cate->category} was updated</p>
             <hr class="my-4">
             <p class="lead">
-                <a class="btn btn-primary btn-lg" href="admin" role="button">Go Admin</a>
+                <a class="btn btn-primary btn-lg" href="admin/" role="button">Go Admin</a>
             </p>
         </div>
     {/if}

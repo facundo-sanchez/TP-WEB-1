@@ -8,6 +8,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 
 <body>
@@ -34,19 +35,24 @@
                                 <a class="dropdown-item" href="#">Ups!</a>
                             </div>
                         </li>
-                        
+                        {if isset($smarty.session.role) && $smarty.session.role == 1}
+                             <li class="nav-item"><a class="nav-link" href="admin/">Admin</a></li>
+                        {/if}
                         {if isset($smarty.session.user_id)}
-                         <li class="nav-item"><a class="nav-link" href="admin">Admin</a></li>
                          <li class="nav-item"><a class="btn btn-primary" href = "sing-off">Sign off</a></li>
                         {else}
                             <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
                             <li class="nav-item"><a class="nav-link" href="register">Register</a></li>
                         {/if}
                     </ul>
+                    <form action="search" class="form-inline my-2 my-lg-0"  method='post'>
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="input_search" aria-label="Search">
+                        <button class="btn btn-outline-ligth my-2 my-sm-0" type="submit">Search</button>
+                    </form>
                      {if isset($smarty.session.user_id)}
-                       <ul class="navbar-nav ">
+                       <ul class="navbar-nav p-1 ">
                         <!--TP-2 PARA CONFIGURACION DE USUARIO.-->
-                            <li class="nav-item"><a class="nav-link" href="admin">Welcome {$smarty.session.name} {$smarty.session.surname}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="admin/">Welcome {$smarty.session.name} {$smarty.session.surname}</a></li>
                         </ul>
                      {/if}
                 </div>

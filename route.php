@@ -5,7 +5,7 @@ require_once('controller/AuthController.php');
 
 //urls
 define('BASE_URL','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/home');
-define('admin','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/admin');
+define('admin','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/admin/');
 define('login','//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['PHP_SELF']).'/login');
 
 $controller_news = new NewsController();
@@ -24,7 +24,12 @@ $params = explode('/',$action);
 
 switch($params[0]){
     case 'home':
-        $controller_news->showHome();
+        if(isset($params[1])){
+            $controller_news->showHome($params[1]);
+        }else{
+            $controller_news->showHome(1);
+        }
+        
         break;
         
     case 'news':
@@ -34,15 +39,8 @@ switch($params[0]){
             header('Location:'.BASE_URL);
             die();
         }
-      
         break;
-        
-    /*
-    case 'category':
-        $controller->showCategory();
-        break;
-    */
-
+    
     case 'filter':
         if(isset($params[1])){
             $controller_news->showFilter($params[1]);
@@ -53,6 +51,10 @@ switch($params[0]){
       
         break;
 
+    case 'search':
+        $controller_news->showSearch();
+        break;    
+
     case 'register':
         $controller_user->Register();
         break;
@@ -62,11 +64,15 @@ switch($params[0]){
         break;
 
     case 'admin':
+        if(isset($params[1])){
+           $page = $params[1];
+        }else{
+            $page = 1;
+        }
         $controller_user->checkLogged();
         $category = $controller_category->showCategory();
         $admin = $controller_user->ShowUser();
-        $controller_news->showAdminNews($category,$admin);
-   
+        $controller_news->showAdminNews($category,$admin,$page);
         break;
 
     //news
@@ -141,6 +147,41 @@ switch($params[0]){
             die();
         }
        
+        break;
+
+    case 'confirm-delete-user':
+        if(isset($params[1])){
+            $controller_user->showConfirmDeleteUser($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+        break;
+    case 'delete-users':
+        if(isset($params[1])){
+            $controller_user->userDelete($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+        break;
+    case 'update-admin':
+        if(isset($params[1])){
+            $controller_user->userAdminRole($params[1],'update');
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+        break;
+
+    case 'remove-admin':
+        if(isset($params[1])){
+            $controller_user->userAdminRole($params[1],'remove');
+               
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
         break;
 
     case 'sing-off':
