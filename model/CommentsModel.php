@@ -10,11 +10,12 @@ class CommentsModel extends SQLModel{
     function getComments(){
         try{
             //SELECT a.comment,a.points,a.id_news,b.title,b.description,b.img,b.id_category,c.category FROM comments a LEFT JOIN news b ON a.id_news = b.id LEFT JOIN categories c ON b.id_category = c.id
-            $query = $this->connect->prepare('SELECT a.id,a.comment,a.points,a.id_news FROM comments a LEFT JOIN news b ON a.id_news = b.id LEFT JOIN categories c ON b.id_category = c.id ORDER BY a.id DESC');
+            $query = $this->connect->prepare('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id ORDER BY id DESC');
             $query->execute([]);
             $result = $query->fetchAll(PDO::FETCH_OBJ);
         
             return $result;
+
         }catch(Exception $e){
             echo 'ERROR '.$e->getMessage();
         }
@@ -22,7 +23,7 @@ class CommentsModel extends SQLModel{
 
     function getCommentsNewsId($id){
         try{
-            $query = $this->connect->prepare('SELECT * FROM comments WHERE id_news = ? ORDER BY id DESC');
+            $query = $this->connect->prepare('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY id DESC');
             $query->execute([$id]);
             $result = $query->fetchAll(PDO::FETCH_OBJ);
         
@@ -44,10 +45,10 @@ class CommentsModel extends SQLModel{
         }
     }
 
-    function addComments($comment,$point,$date,$id_news){
+    function addComments($comment,$point,$date,$id_news,$id_user){
         try{
-            $query = $this->connect->prepare('INSERT INTO comments (comment,points,date,id_news) VALUES (?,?,?,?)');
-            $query->execute([$comment,$point,$date,$id_news]);
+            $query = $this->connect->prepare('INSERT INTO comments (comment,points,date,id_news,id_users) VALUES (?,?,?,?,?)');
+            $query->execute([$comment,$point,$date,$id_news,$id_user]);
             return $this->connect->lastInsertId();
             
         }catch(Exception $e){
@@ -57,6 +58,7 @@ class CommentsModel extends SQLModel{
 
     function deleteComments($id){
         try{
+
             $query = $this->connect->prepare('DELETE FROM comments WHERE id = ?');
             $query->execute([$id]);
         }catch(Exception $e){
@@ -75,11 +77,10 @@ class CommentsModel extends SQLModel{
         }
     }
 
-    //SELECT * FROM `comments` ORDER BY points DESC
     function filterComments($id,$points){
         try{
-            $query = $this->connect->prepare('SELECT * FROM `comments` WHERE points = ? AND id_news = ?');
-            $query->execute([$points,$id]);
+            $query = $this->connect->prepare('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id WHERE points = ?');
+            $query->execute([$id,$points]);
             $result = $query->fetchAll(PDO::FETCH_OBJ);
             return $result;
         }catch(Exception $e){

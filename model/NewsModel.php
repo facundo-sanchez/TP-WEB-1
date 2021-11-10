@@ -55,19 +55,25 @@ class NewsModel extends SQLModel{
             echo 'ERROR'.$e->getMessage();
         }
     }
-    
-    function searchNews($params){
+    function countSearch($params){
         //SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%loca%" OR b.category LIKE "%loca%"
         try{
-            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%"?"%" AND a.description LIKE "%"?"%"');
-            $news->execute([$params,$params]);
+            $news = $this->connect->prepare('SELECT COUNT(*) AS news,a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%"?"%" OR a.description LIKE "%"?"%" OR b.category LIKE "%"?"%" OR b.description LIKE "%"?"%"');
+            $news->execute([$params,$params,$params,$params]);
+            $result = $news->fetch(PDO::FETCH_OBJ);
+
+            return $result;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }
+    }
+    function searchNews($params,$page,$max_article){
+        //SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%loca%" OR b.category LIKE "%loca%"
+        try{
+            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description AS description_category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%"?"%" OR a.description LIKE "%"?"%" OR b.category LIKE "%"?"%" OR b.description LIKE "%"?"%"');
+            $news->execute([$params,$params,$params,$params]);
             $result = $news->fetchAll(PDO::FETCH_OBJ);
-            if(empty($result)){
-                $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%"?%"" OR b.category LIKE "%"?"%"');
-                $category->execute([$params,$params]);
-                $result = $category->fetchAll(PDO::FETCH_OBJ);
-                var_dump($params);
-            }
+
             return $result;
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();

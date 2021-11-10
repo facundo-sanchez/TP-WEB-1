@@ -35,7 +35,7 @@ class NewsController{
        
 
         if(count($news) === 0){
-            $this->view->RenderMessage('ERROR 404','Not found news');
+            $this->view->RenderMessage('Ups!','Not found news');
         }else{
             $this->view->renderHome($news,$page,$page_count);
         }
@@ -65,11 +65,20 @@ class NewsController{
         }
     }
     
-    public function showSearch(){
+    public function showSearch($page = null){
         if(!empty($_POST)){
             $search = $_POST['input_search'];
-            $news = $this->model->searchNews($search);
+            $get_count_page = $this->model->countSearch($search);
+           
+            $page_count = $get_count_page->news/4;
+            $home = ($page-1)*4;
+            $news = $this->model->searchNews($search,$home,4);
             var_dump($news);
+            if(!empty($news)){
+                $this->view->renderHome($news,0,0);
+            }else{
+                $this->view->RenderMessage('No Search Results','Not found news or Categories');
+            }
         }else{
             header('Location:'.BASE_URL);
             die();

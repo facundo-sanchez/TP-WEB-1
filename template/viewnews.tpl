@@ -21,9 +21,9 @@
   <div class='card m-5'>
   <form id='form'>
     <div class="form-group m-2">
-    <input class="form-check-input d-none" type="radio" name="id_news" id="exampleRadios1" value="{$news->id}" checked>
+    <input class="form-check-input d-none" type="radio" name="id_news" id="exampleRadios1" value="{$news->id}" checked required>
       <label for="exampleFormControlSelect1">Puntos</label>
-      <select class="form-control" id="exampleFormControlSelect1" name ='points'>
+      <select class="form-control" id="exampleFormControlSelect1" name ='points' required>
           <option value = '1'>1</option>
           <option value = '2'>2</option>
           <option value = '3'>3</option>
@@ -33,7 +33,7 @@
     </div>
     <div class="form-group m-2">
       <label for="exampleFormControlTextarea1">Comments</label>
-      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name='comment'></textarea>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name='comment' required></textarea>
     </div>
 
     <div class="col-auto">
@@ -84,12 +84,17 @@
 
     <article class='comments' id = 'comments'>
       <div class="card comments-card" v-for='c in comments'>
-        <div class="card-header" style="height: 50px;">
+        <div class="card-header" style="height: 80px;">
+        <p><strong>{{c.name}} {{c.surname}}</strong><span class="badge badge-primary ml-3" v-if='c.role == 0'>User</span><span class="badge badge-success ml-3" v-if='c.role == 1'>Admin</span></p>
         <p>Points: <strong>{{c.points}}</strong> Date: <strong>{{c.date}}</strong></p>      
         </div>
         <div class="card-body">
           {{c.comment}}
-          <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
+          {/literal}
+          {if isset($smarty.session.user_id) && $smarty.session.role == 1}
+            <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
+          {/if}
+          {literal}
         </div>
       </div>
     </article>

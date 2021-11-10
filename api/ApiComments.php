@@ -17,46 +17,66 @@ class ApiComments extends ApiController{
         $comment = $this->model->getCommentsNewsId($id);
         if($comment){
             $this->view->response($comment);
+        }else{
+            $this->view->response('Comments not found',404);
         }
     }
 
     public function sendComments(){
         $this->auth->checkLoggedIn();
         $data = $this->getData();
-        $id_news = $data->id_news;
-        $comment = $data->comment;
-        $points = $data->points;
-        $date = date("m.d.y");
-       
-        $id = $this->model->addComments($comment,$points,$date,$id_news);
-        $validate = $this->model->getCommentsId($id);
-       
-        if($validate){
-            $this->view->response($validate,200);
+    
+        if(isset($data->id_news) && isset($data->comment) && isset($data->points) && filter_var($data->id_news,FILTER_VALIDATE_INT)){
+            if(strlen($data->comment)>200 && strlen($data->point)>1){
+                $this->view->response('Max Caracter',200);
+            }else{
+                $id_news = $data->id_news;
+                $comment = $data->comment;
+                $points = $data->points;
+                
+                date_default_timezone_set('America/Argentina/Buenos_Aires');    
+                $date = date('Y-m-d h:i:s',time());  
+                $id_user = $_SESSION['user_id'];
+
+                $id = $this->model->addComments($comment,$points,$date,$id_news,$id_user);
+                $validate = $this->model->getCommentsId($id);
+               
+                if($validate){
+                    $this->view->response($validate,200);
+                }else{
+                    $this->view->response('ERROR SERVER',500);
+                }
+            }
+          
         }else{
-            $this->view->response('ERROR SERVER',500);
+            $this->view->response('Incomplete fields',200);
         }
+       
     }
 
     public function deleteComments($params = null){
         $this->auth->checkLoggedIn();
+
         if($validate = $this->auth->checkAdmin()){
-            $id = $params[':ID'];
-            $comments=$this->model->getCommentsId($id);
-            if($comments){
-                $this->model->deleteComments($id);
-                $validate = $this->model->getCommentsId($id);
-                var_dump($validate);
-                if($validate == false){
-                    $this->view->response('Eliminado');
+            if(isset($params[':ID']) && filter_var($params[':ID'],FILTER_VALIDATE_INT)){
+                $id = $params[':ID'];
+                $comments=$this->model->getCommentsId($id);
+                if($comments){
+                    $this->model->deleteComments($id);
+                    $validate = $this->model->getCommentsId($id);
+                    if($validate == false){
+                        $this->view->response('Eliminado');
+                    }else{
+                        $this->view->response('ERROR SERVER',500);   
+                    }
                 }else{
-                    $this->view->response('ERROR SERVER',500);   
+                    $this->view->response('Comment id '.$id.' not fount',404);
                 }
             }else{
-                $this->view->response('Comentario id '.$id.' no encontrado',404);
+                $this->view->response('Incomplete fields',200);
             }
+            
         }
-        
     }
 
     public function orderComments($params = null){
@@ -66,50 +86,47 @@ class ApiComments extends ApiController{
             $option = $params[':OPTION'];
             if($order === 'asc'){
                 if($option === 'date'){
-                    $comments = $this->model->orderComments('SELECT * FROM `comments` WHERE id_news = ? ORDER BY date ASC',$id);
+                  
+                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY date ASC',$id);
                     $this->view->response($comments);
                 }elseif($option === 'point'){
-                    $comments = $this->model->orderComments('SELECT * FROM `comments` WHERE id_news = ? ORDER BY points ASC',$id);
+                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY points ASC',$id);
                     $this->view->response($comments);
                 }else{
-                    $this->view->response('NOT FOUND',404);
+                    $this->view->response('Option not found',404);
                 }
-
             }elseif($order == 'desc'){
                 if($option === 'date'){
-                    $comments = $this->model->orderComments('SELECT * FROM `comments` WHERE id_news = ? ORDER BY date DESC',$id);
+                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY date DESC',$id);
                     $this->view->response($comments);
                 }elseif($option === 'point'){
-                    $comments = $this->model->orderComments('SELECT * FROM `comments` WHERE id_news = ? ORDER BY points DESC',$id);
+                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY points DESC',$id);
                     $this->view->response($comments);
                 }else{
-                    $this->view->response('NOT FOUND',404);
+                    $this->view->response('Option not found',404);
                 }
-               
             }else{
-                $this->view->response('NOT FOUND',404);
+                $this->view->response('Order not found',404);
             }
         }else{
-            echo 'no';
+            $this->view->response('Invalid order or option',200);
         }
     }
 
     public function filterComments($params = null){
         $id = $params[':ID'];
         $filter = $params[':FILTER'];
-        if(isset($filter)){
+        if(isset($filter) && filter_var($filter,FILTER_VALIDATE_INT)){
             if($filter >=1 && $filter<=5){
                 $comments = $this->model->filterComments($id,$filter);
                 if($comments){
                     $this->view->response($comments);
-                }else{
-                    $this->view->response('Comments with points not found',404);
                 }
             }else{
                 $this->view->response('Error point',404);
             }
         }else{
-            $this->view->response('Not found',404);
+            $this->view->response('Invalid filtering',200);
         }
     }
 

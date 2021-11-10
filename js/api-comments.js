@@ -46,6 +46,8 @@ async function getComments() {
         if (response.ok) {
             app.comments = json;
             setTimeout(dataDelete, 100);
+        } else {
+            show_danger_filter();
         }
 
     } catch (error) {
@@ -76,7 +78,8 @@ async function addComments(e) {
 
         if (response.ok) {
             const json = await response.json();
-            app.comments.unshift(json);
+            //app.comments.unshift(json);
+            getComments();
             setTimeout(dataDelete, 100);
             document.querySelector("#form").reset();
         }
@@ -124,13 +127,12 @@ async function filterComments(data) {
             app.comments = json;
             show_warning_filter();
             setTimeout(dataDelete, 100);
-        } else {
-            hide_warning_filter();
-            show_danger_filter()
         }
 
     } catch (e) {
         console.log(e);
+        hide_warning_filter();
+        show_danger_filter()
     }
 }
 

@@ -46,7 +46,7 @@
                         {/if}
                     </ul>
                     <form action="search" class="form-inline my-2 my-lg-0"  method='post'>
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="input_search" aria-label="Search">
+                        <input class="form-control mr-sm-2" placeholder="Search" name="input_search" >
                         <button class="btn btn-outline-ligth my-2 my-sm-0" type="submit">Search</button>
                     </form>
                      {if isset($smarty.session.user_id)}
