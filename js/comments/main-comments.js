@@ -1,6 +1,5 @@
 'use strict'
 
-
 import ApiComments from './api-comments.js';
 
 const comments = new ApiComments();
@@ -20,7 +19,7 @@ if (form != null) {
 }
 
 comments.getComments(data_comment);
-setTimeout(dataDelete, 150);
+setTimeout(dataDelete, 100);
 
 
 function getData(e) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once('SQLModel.php');
+require_once('./model/SQLModel.php');
 
 class NewsModel extends SQLModel{
 
@@ -49,7 +49,6 @@ class NewsModel extends SQLModel{
 
     function getFilter($id,$page,$news_articles){
         try{
-
             $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = :id ORDER BY a.id DESC LIMIT :home,:news');
             $category->bindParam(':id',$id,PDO::PARAM_STR);
             $category->bindParam(':home',$page,PDO::PARAM_INT);
@@ -65,7 +64,6 @@ class NewsModel extends SQLModel{
     }
 
     function searchNews($params){
-        //SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%loca%" OR b.category LIKE "%loca%"
         try{
             $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description AS description_category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%":search"%" OR a.description LIKE "%":search"%" OR b.category LIKE "%":search"%" OR b.description LIKE "%":search"%"');
             $news->bindParam(':search',$params,PDO::PARAM_STR);

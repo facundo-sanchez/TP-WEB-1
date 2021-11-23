@@ -8,6 +8,7 @@ class CategoryController{
     private $model;
     private $view;
     private $auth;
+    private $news;
 
     public function __construct(){
         $this->model = new CategoryModel();
@@ -83,8 +84,6 @@ class CategoryController{
         }else{
             $this->view->RenderMessage('ERROR','ID NUMBER ERROR');
         }
-       
-           
     }
 
     public function showDeleteCategory($id){
@@ -106,8 +105,6 @@ class CategoryController{
                 }else{
                     $this->view->RenderMessage('ERROR 204','CATEGORY NOT FOUND');
                 }
-                
-              
             }
         }else{
             header('Location:'.admin);

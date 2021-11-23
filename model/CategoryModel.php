@@ -1,6 +1,6 @@
 <?php
 
-require_once('SQLModel.php');
+require_once('./model/SQLModel.php');
 
 class CategoryModel extends SQLModel{
   
