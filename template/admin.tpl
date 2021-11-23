@@ -238,5 +238,5 @@
      {/if}
 </div>
 </div>
-<script src="./js/admin/mainAdmin.js" type='module'></script>
+<script src="./js/admin/main-admin.js" type='module'></script>
 {include file="./footer.tpl"}

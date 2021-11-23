@@ -1,6 +1,6 @@
 'use strict'
 import FormStyles from './form-styles.js';
-import FormSend from './formSend.js';
+import FormSend from './form-send.js';
 
 const formstyles = new FormStyles();
 const formsend = new FormSend();
