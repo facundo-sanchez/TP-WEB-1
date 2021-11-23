@@ -21,10 +21,14 @@ class NewsModel extends SQLModel{
             echo 'ERROR'.$e->getMessage();
         }
     }
-    function countNews(){
+    function countNews($sql,$id){
         try{
-            $news = $this->connect->prepare('SELECT COUNT(id) AS news FROM news');
-            $news->execute();
+            $news = $this->connect->prepare($sql);
+            if($id !=null){
+                $news->execute([$id]);
+            }else{
+                $news->execute();
+            }
             $result = $news->fetch(PDO::FETCH_OBJ);
             return $result;
         }catch(Exception $e){
@@ -34,20 +38,24 @@ class NewsModel extends SQLModel{
 
     function getNewsId($id){
         try{
-            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,c.comment,c.points FROM news a LEFT JOIN categories b ON a.id_category = b.id LEFT JOIN comments c ON a.id = c.id_news WHERE a.id = ?');
+            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id  WHERE a.id = ?');
             $news->execute([$id]);
             $result = $news->fetch(PDO::FETCH_OBJ);
-            
             return $result;
         }catch(Exception $e){
             echo 'ERROR'.$e->getMessage();
         }
     }
 
-    function getFilter($id){
+    function getFilter($id,$page,$news_articles){
         try{
-            $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = ?');
-            $category->execute([$id]);
+
+            $category = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = :id ORDER BY a.id DESC LIMIT :home,:news');
+            $category->bindParam(':id',$id,PDO::PARAM_STR);
+            $category->bindParam(':home',$page,PDO::PARAM_INT);
+            $category->bindParam(':news',$news_articles,PDO::PARAM_INT);
+            $category->execute();
+
             $result = $category->fetchAll(PDO::FETCH_OBJ);
             
             return $result;
@@ -55,23 +63,13 @@ class NewsModel extends SQLModel{
             echo 'ERROR'.$e->getMessage();
         }
     }
-    function countSearch($params){
-        //SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%loca%" OR b.category LIKE "%loca%"
-        try{
-            $news = $this->connect->prepare('SELECT COUNT(*) AS news,a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%"?"%" OR a.description LIKE "%"?"%" OR b.category LIKE "%"?"%" OR b.description LIKE "%"?"%"');
-            $news->execute([$params,$params,$params,$params]);
-            $result = $news->fetch(PDO::FETCH_OBJ);
 
-            return $result;
-        }catch(Exception $e){
-            echo 'ERROR'.$e->getMessage();
-        }
-    }
-    function searchNews($params,$page,$max_article){
+    function searchNews($params){
         //SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description FROM categories b LEFT JOIN news a ON a.id_category = b.id WHERE b.description LIKE "%loca%" OR b.category LIKE "%loca%"
         try{
-            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description AS description_category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%"?"%" OR a.description LIKE "%"?"%" OR b.category LIKE "%"?"%" OR b.description LIKE "%"?"%"');
-            $news->execute([$params,$params,$params,$params]);
+            $news = $this->connect->prepare('SELECT a.id,a.title,a.description,a.img,a.id_category,b.category,b.description AS description_category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE a.title LIKE "%":search"%" OR a.description LIKE "%":search"%" OR b.category LIKE "%":search"%" OR b.description LIKE "%":search"%"');
+            $news->bindParam(':search',$params,PDO::PARAM_STR);
+            $news->execute();
             $result = $news->fetchAll(PDO::FETCH_OBJ);
 
             return $result;
@@ -102,26 +100,55 @@ class NewsModel extends SQLModel{
         }
         
     }
+
     function uploadImage($img){
         $target = 'images/news/'.uniqid().'.'. strtolower(pathinfo($img['name'],PATHINFO_EXTENSION));
         move_uploaded_file($img['tmp_name'],$target);
         return $target;
     }
-    function updateNews($id,$title,$category,$description){
+
+    function deleteImageNews($id){
         try{
-            $query = $this->connect->prepare('UPDATE news SET title = ?, description = ?, id_category = ? WHERE id = ?');
-            $query->execute([$title,$description,$category,$id]);
+            $query = $this->connect->prepare('UPDATE news SET img = ? WHERE id = ?');
+            $query->execute([null,$id]);
         }catch(Exception $e){
             echo 'ERRPR'.$e->getMessage();
         }
     }
 
+    function updateNews($id,$title,$category,$description,$img = null){
+        $pathImg = null;
+        if($img){
+            $pathImg = $this->uploadImage($img);
+            try{
+                $query = $this->connect->prepare('UPDATE news SET title = ?, description = ?, img = ?, id_category = ? WHERE id = ?');
+                $query->execute([$title,$description,$pathImg,$category,$id]);
+            }catch(Exception $e){
+                echo 'ERRPR'.$e->getMessage();
+            }
+        }else{
+            try{
+                $query = $this->connect->prepare('UPDATE news SET title = ?, description = ?, id_category = ? WHERE id = ?');
+                $query->execute([$title,$description,$category,$id]);
+            }catch(Exception $e){
+                echo 'ERRPR'.$e->getMessage();
+            }
+        }
+    }
+
+    function UpdateCategoryNews($undefined,$id){
+        try{
+            $query= $this->connect->prepare('UPDATE news SET id_category = ? WHERE id_category = ?');
+            $query->execute([$undefined->id,$id]);
+            return true;
+        }catch(Exception $e){
+            echo 'ERROR'.$e->getMessage();
+        }  
+        
+    }
+
     function deleteNews($id){
         try{
-            //eliminar comentarios asociados con la noticia
-            $query = $this->connect->prepare('DELETE FROM `comments` WHERE id_news = ?');
-            $query->execute([$id]);
-            
             $query = $this->connect->prepare('DELETE FROM news WHERE id = ?');
             $query->execute([$id]);
         }catch(Exception $e){
@@ -129,9 +156,4 @@ class NewsModel extends SQLModel{
         }
 
     }
-/*
-consulta de busqueda
-SELECT * FROM `categories` WHERE (description LIKE '%%' OR category LIKE '%fut%')
-
-*/
 }

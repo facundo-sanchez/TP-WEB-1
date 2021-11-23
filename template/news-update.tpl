@@ -3,7 +3,7 @@
     <div class="card card-body border-secondary text-center m-3">
     
         {if $success == false}
-            <form action="update-news" method="POST">
+            <form action="update-news" method="POST" enctype = 'multipart/form-data'>
                 <label class="form-control-sm">News ID</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="id_news" id="exampleRadios1" value="{$news->id}" checked>
@@ -26,6 +26,10 @@
                             {/if}     
                         {/foreach}  
                     </select>
+                </div>
+                <div class="custom-file">
+                   <input type="file" name = 'input_file' class="custom-file-input" id="customFileLang" lang="es">
+                    <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                 </div>
                 <div class="form-group">
                 <label for="exampleFormControlTextarea1">Description</label>

@@ -64,8 +64,8 @@ class AuthModel extends SQLModel{
 
     function userAdmin($id){
         try{
-            $query = $this->connect->prepare('UPDATE users SET role = 1 WHERE id = ?');
-            $query->execute([$id]);
+            $query = $this->connect->prepare('UPDATE users SET role = ? WHERE id = ?');
+            $query->execute([1,$id]);
         }catch(Exception $e){
             echo 'ERROR: '.$e->getMessage();
         }
@@ -73,8 +73,8 @@ class AuthModel extends SQLModel{
 
     function userDeleteAdmin($id){
         try{
-            $query = $this->connect->prepare('UPDATE users SET role = 0 WHERE id = ? ');
-            $query->execute([$id]);
+            $query = $this->connect->prepare('UPDATE users SET role = ? WHERE id = ? ');
+            $query->execute([0,$id]);
         }catch(Exception $e){
             echo 'ERROR: '.$e->getMessage();
         }
@@ -84,7 +84,6 @@ class AuthModel extends SQLModel{
         try{
             $query = $this->connect->prepare('DELETE FROM users WHERE id = ?');
             $query->execute([$id]);
-            
         }catch(Exception $e){
             echo 'ERROR: ' . $e->getMessage();
         }

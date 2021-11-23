@@ -42,8 +42,13 @@ switch($params[0]){
         break;
     
     case 'filter':
-        if(isset($params[1])){
-            $controller_news->showFilter($params[1]);
+        if(!empty($params[1])){
+            if(isset($params[2]) && $params[2] != 0){
+                $controller_news->showFilter($params[1],$params[2]);
+            }else{
+                $controller_news->showFilter($params[1],1);
+            }
+          
         }else{
             header('Location:'.BASE_URL);
             die();
@@ -97,6 +102,14 @@ switch($params[0]){
     case 'confirm-delete-news':
         if(isset($params[1])){
             $controller_news->showConfirmDeleteNews($params[1]);
+        }else{
+            header('Location:'.BASE_URL);
+            die();
+        }
+        break;
+    case 'delete-image-news':
+        if(isset($params[1])){
+            $controller_news->showDeleteImage($params[1]);
         }else{
             header('Location:'.BASE_URL);
             die();

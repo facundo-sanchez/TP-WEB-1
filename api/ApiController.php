@@ -15,7 +15,7 @@ abstract class ApiController{
         $this->auth = new AuthHelper();
     }
 
-    public function getData(){
+    protected function getData(){
         return json_decode($this->data);
     }
 }

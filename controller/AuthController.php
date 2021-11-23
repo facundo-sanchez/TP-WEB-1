@@ -2,21 +2,19 @@
 require_once('./model/AuthModel.php');
 require_once('./view/NewsView.php');
 require_once('./helper/AuthHelper.php');
+require_once('./helper/CommentsHelper.php');
 
 class AuthController{
     private $model;
     private $view;
     private $auth;
+    private $comments;
 
     public function __construct(){
         $this->model = new AuthModel();
         $this->view = new NewsView();
         $this->auth = new AuthHelper();
-    }
-
-    public function getUsers(){
-        $users = $this->model->getUsers($_SESSION['user_id']);
-        return $users;
+        $this->comments = new CommentsHelper();
     }
 
     public function checkLogged(){
@@ -31,9 +29,9 @@ class AuthController{
     public function Register(){
         if($this->auth->VerifySession()=== false){
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                if(!empty($_POST)){
-                    $name = $_POST['user_name'];
-                    $surname = $_POST['user_surname'];
+                if(!empty($_POST['user_name']) && !empty($_POST['user_surname']) && !empty($_POST['user_email']) && !empty($_POST['user_pass']) && !empty($_POST['user_repeat_pass'])){
+                    $name = filter_var($_POST['user_name'],FILTER_SANITIZE_STRING);
+                    $surname = filter_var($_POST['user_surname'],FILTER_SANITIZE_STRING);
                     $email = filter_var($_POST['user_email'],FILTER_SANITIZE_EMAIL);
                     $password = password_hash($_POST['user_pass'],PASSWORD_BCRYPT);
                     $repeat_password = $_POST['user_repeat_pass'];
@@ -71,10 +69,9 @@ class AuthController{
     }
 
     public function Login(){
-        //VALIDAR LOGIN
         if($this->auth->VerifySession() === false){
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                if(!empty($_POST)){
+                if(!empty($_POST['user_email']) && !empty($_POST['user_pass'])){
                     $email = filter_var($_POST['user_email'],FILTER_SANITIZE_EMAIL);
                     $password = $_POST['user_pass'];
                    
@@ -117,17 +114,25 @@ class AuthController{
 
         if($users != false){
             if($option == 'update'){
-                $this->model->userAdmin($id);
-                $this->view->RenderMessage('Success','Admin added');
+                if($id != $_SESSION['user_id']){
+                    $this->model->userAdmin($id);
+                    $this->view->RenderMessage('Success','Admin added');
+                }else{
+                    $this->view->RenderMessage('Error','Admin no added');
+                }
             }elseif($option == 'remove'){
-                $this->model->userDeleteAdmin($id);
-                $this->view->RenderMessage('Success','Admin removed');
+                if($id != $_SESSION['user_id']){
+                    $this->model->userDeleteAdmin($id);
+                    $this->view->RenderMessage('Success','Admin removed');
+                }else{
+                    $this->view->RenderMessage('Error','Admin no remove');
+                }
             }else{
                 $this->view->RenderMessage('ERROR','Option not found');
             }
             
         }else{
-            echo 'error';
+            $this->view->RenderMessage('ERROR','User not remove');
         }
       
     }
@@ -153,8 +158,11 @@ class AuthController{
         if($id != $_SESSION['user_id']){
             $users = $this->model->getUsersId($id);
             if($users != false){
-                $this->model->userDelete($id);
-                $this->view->renderConfirm(0,0,true);
+                $deleteComments = $this->comments->deleteCommentsIdUser($id);
+                if($deleteComments){
+                    $this->model->userDelete($id);
+                    $this->view->renderConfirm(0,0,true);
+                }
             }else{
                 $this->view->RenderMessage('ERROR','User no deleted');
             }

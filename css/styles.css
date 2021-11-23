@@ -46,6 +46,23 @@ footer {
     grid-template-columns: repeat(3, 1fr);
 }
 
+.content-view-news {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+}
+
+.content-filter {
+    height: 250px;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.content-comment {
+    grid-column: 1;
+    grid-row: 1;
+}
+
 .content-news-admin {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

@@ -18,6 +18,41 @@
             </article>
         {/foreach}   
     </article>
+     <article class='pagination-news'>
+        <nav aria-label="..." class='nav-pagination'>
+            <ul class="pagination">
+                {if $page-1<1}
+                    <li class="page-item disabled">
+                    <a class="page-link"  href="filter/{$category}/{$page-1}" >Previous</a>
+                    </li>
+                {else}
+                    <li class="page-item">
+                    <a class="page-link"  href="filter/{$category}/{$page-1}" >Previous</a>
+                    </li>
+                {/if}
+
+                {for $i = 1 to $page_count}
+                {if $page == $i}
+                     <li class="page-item active"><a class="page-link" href="filter/{$category}/{$i}">{$i}</a></li>
+                {else}
+                     <li class="page-item"><a class="page-link" href="filter/{$category}/{$i}">{$i}</a></li>
+                {/if}
+                {/for}
+                
+                {if $page+1 > $page_count}
+                    <li class="page-item disabled">
+                        <a class="page-link"  href="filter/{$category}/{$page+1}">Next</a>
+                    </li>
+                {else}
+                    <li class="page-item">
+                        <a class="page-link" href="filter/{$category}/{$page+1}">Next</a>
+                    </li>
+                {/if}
+               
+                </li>
+            </ul>
+        </nav>
+    </article>
 </main>
 
 {include file="./footer.tpl"}

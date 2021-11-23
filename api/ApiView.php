@@ -9,6 +9,7 @@ class ApiView{
     private function requestStatus($code){
         $status = array(
             200 =>'OK',
+            204 =>'No Content',
             404 =>'Not Found',
             500 => 'Server Error'
         );

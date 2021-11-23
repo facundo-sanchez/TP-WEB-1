@@ -1,10 +1,15 @@
 <?php
 
+require_once('./model/AuthModel.php');
+
 class AuthHelper{
+    private $model;
+
     function __construct(){
+        $this->model = new AuthModel();
         if(session_status() != PHP_SESSION_ACTIVE){
             session_start();
-        }
+        }  
     }
     public function VerifySession(){
         if(isset($_SESSION['login']) && $_SESSION['login'] === true){
@@ -32,5 +37,10 @@ class AuthHelper{
         session_destroy();
         header('Location:'.login);
         die();
+    }
+    
+    public function GetUsers($id){
+        $users = $this->model->getUsers($id);
+        return $users;
     }
 }

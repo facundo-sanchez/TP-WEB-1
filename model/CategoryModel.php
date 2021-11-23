@@ -57,12 +57,8 @@ class CategoryModel extends SQLModel{
         return $result;
     }
     
-    function deleteCategory($id,$undefined){
+    function deleteCategory($id){
         try{
-            //'SELECT * FROM categories WHERE id = ? || title = ?'
-            $query= $this->connect->prepare('UPDATE news SET id_category = ? WHERE id_category = ?');
-            $query->execute([$undefined->id,$id]);
-
             $query = $this->connect->prepare('DELETE FROM categories WHERE id = ?');
             $query->execute([$id]);
             

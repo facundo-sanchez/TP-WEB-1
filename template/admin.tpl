@@ -12,6 +12,9 @@
                             <li class="nav-item">
                                 <button type="button" class="btn btn-primary"><a class="text-light" href="update-news/{$n->id}">Update</a></button>
                                 <button type="button" class="btn btn-danger"><a class="text-light" href="confirm-delete-news/{$n->id}">Delete</a></button>
+                                {if isset($n->img) && $n->img !=null}
+                                     <button type="button" class="btn btn-warning"><a class="text-light" href="delete-image-news/{$n->id}">Delete Image</a></button>
+                                {/if}
                             </li>
                         </ul>
                     </div>
@@ -192,6 +195,7 @@
             <!--Recortar esto para el forench-->
         </div>
     </div>
+    {if $users != null}
     <div class="card border-secondary m-5">
         <div class="card-header" id="headingThree">
             <h5 class="mb-0">
@@ -200,6 +204,7 @@
                   </button>
             </h5>
         </div>
+        
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
             <div class="content-main-users">
                 <!--For-->
@@ -230,8 +235,8 @@
             </div>
         </div>
     </div>
+     {/if}
 </div>
 </div>
-<script src="./js/formSend.js"></script>
-
+<script src="./js/admin/mainAdmin.js" type='module'></script>
 {include file="./footer.tpl"}

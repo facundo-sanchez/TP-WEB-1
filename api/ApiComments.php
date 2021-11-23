@@ -8,48 +8,64 @@ class ApiComments extends ApiController{
     }
 
     public function getCommentsAll(){
+        $this->auth->checkLoggedIn();
+        $this->auth->checkAdmin();
         $comments = $this->model->getComments();
         $this->view->response($comments);
     }
 
     public function getCommentsNewsId($params = null){
-        $id = $params[':ID'];
-        $comment = $this->model->getCommentsNewsId($id);
-        if($comment){
-            $this->view->response($comment);
+        $id = filter_var($params[':ID'],FILTER_SANITIZE_NUMBER_INT);
+        if(!empty($_GET['points']) || !empty($_GET['order'])){
+            if(!empty($_GET['order'])){
+                $this->orderComments($id,$_GET['order']);
+            }elseif(!empty($_GET['points'])){
+                $this->filterComments($id,$_GET['points']);
+            }
         }else{
-            $this->view->response('Comments not found',404);
+            $comment = $this->model->getCommentsNewsId($id);
+
+            if($comment){
+                $this->view->response($comment);
+            }else{
+                $this->view->response('Comments not found',204);
+            }
         }
+       
     }
 
     public function sendComments(){
         $this->auth->checkLoggedIn();
         $data = $this->getData();
     
-        if(isset($data->id_news) && isset($data->comment) && isset($data->points) && filter_var($data->id_news,FILTER_VALIDATE_INT)){
-            if(strlen($data->comment)>200 && strlen($data->point)>1){
-                $this->view->response('Max Caracter',200);
+        if(isset($data->id_news) && isset($data->comment) && isset($data->points)){
+            if(strlen($data->comment)>200 || strlen($data->points)>1){
+                $this->view->response('Max Caracter',204);
             }else{
-                $id_news = $data->id_news;
-                $comment = $data->comment;
-                $points = $data->points;
-                
-                date_default_timezone_set('America/Argentina/Buenos_Aires');    
-                $date = date('Y-m-d h:i:s',time());  
-                $id_user = $_SESSION['user_id'];
-
-                $id = $this->model->addComments($comment,$points,$date,$id_news,$id_user);
-                $validate = $this->model->getCommentsId($id);
-               
-                if($validate){
-                    $this->view->response($validate,200);
+                if($data->points >=1 && $data->points <=5 && $data->comment != ''){
+                    $id_news = filter_var($data->id_news,FILTER_SANITIZE_NUMBER_INT);
+                    $comment = filter_var($data->comment,FILTER_SANITIZE_STRING);
+                    $points = filter_var($data->points,FILTER_SANITIZE_NUMBER_INT);
+                    
+                    date_default_timezone_set('America/Argentina/Buenos_Aires');    
+                    $date = date('Y-m-d H:i:s',time());  
+                    $id_user = $_SESSION['user_id'];
+    
+                    $id = $this->model->addComments($comment,$points,$date,$id_news,$id_user);
+                    $validate = $this->model->getCommentsId($id);
+                   
+                    if($validate){
+                        $this->view->response($validate,200);
+                    }else{
+                        $this->view->response('ERROR SERVER',500);
+                    }
                 }else{
-                    $this->view->response('ERROR SERVER',500);
+                    $this->view->response('ERROR Points or Comment',200);
                 }
+               
             }
-          
         }else{
-            $this->view->response('Incomplete fields',200);
+            $this->view->response('Incomplete fields',204);
         }
        
     }
@@ -58,8 +74,9 @@ class ApiComments extends ApiController{
         $this->auth->checkLoggedIn();
 
         if($validate = $this->auth->checkAdmin()){
-            if(isset($params[':ID']) && filter_var($params[':ID'],FILTER_VALIDATE_INT)){
-                $id = $params[':ID'];
+          
+            if(isset($params[':ID']) && $params[':ID'] != ''){
+                $id = filter_var($params[':ID'],FILTER_SANITIZE_NUMBER_INT);
                 $comments=$this->model->getCommentsId($id);
                 if($comments){
                     $this->model->deleteComments($id);
@@ -70,63 +87,60 @@ class ApiComments extends ApiController{
                         $this->view->response('ERROR SERVER',500);   
                     }
                 }else{
-                    $this->view->response('Comment id '.$id.' not fount',404);
+                    $this->view->response('Comment id '.$id.' not fount',204);
                 }
             }else{
-                $this->view->response('Incomplete fields',200);
+                $this->view->response('Incomplete fields',204);
             }
             
         }
     }
 
-    public function orderComments($params = null){
-        if(isset($params[':ID']) && isset($params[':ORDER']) && isset($params[':OPTION'])){
-            $id = $params[':ID'];
-            $order = $params[':ORDER'];
-            $option = $params[':OPTION'];
-            if($order === 'asc'){
-                if($option === 'date'){
-                  
-                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY date ASC',$id);
-                    $this->view->response($comments);
-                }elseif($option === 'point'){
-                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY points ASC',$id);
-                    $this->view->response($comments);
-                }else{
-                    $this->view->response('Option not found',404);
-                }
-            }elseif($order == 'desc'){
-                if($option === 'date'){
-                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY date DESC',$id);
-                    $this->view->response($comments);
-                }elseif($option === 'point'){
-                    $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,a.id_users,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_news = ? AND a.id_users = b.id ORDER BY points DESC',$id);
-                    $this->view->response($comments);
-                }else{
-                    $this->view->response('Option not found',404);
-                }
-            }else{
-                $this->view->response('Order not found',404);
-            }
-        }else{
-            $this->view->response('Invalid order or option',200);
-        }
+    public function deleteCommentsIdUser($id){
+        $delete = $this->model->deleteCommentsIdUser($id);
+        return $delete;
     }
 
-    public function filterComments($params = null){
-        $id = $params[':ID'];
-        $filter = $params[':FILTER'];
+    public function deleteCommentsIdNews($id){
+        $delete = $this->model->deleteCommentsIdNews($id);
+        return $delete;
+    }
+    
+    public function orderComments($id,$order){
+        $order = filter_var($order,FILTER_SANITIZE_URL);
+        $id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
+            if($order === 'asc-date'){
+                $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date ASC',$id);
+                $this->view->response($comments);
+            }elseif($order == 'des-date'){
+                $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date DESC',$id);
+                $this->view->response($comments);
+            }elseif($order == 'asc-point'){
+                $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points ASC',$id);
+                $this->view->response($comments);
+            }elseif($order == 'des-point'){
+                $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points DESC',$id);
+                $this->view->response($comments);
+            }
+    }
+
+    public function filterComments($id){
+        $filter = filter_var($_GET['points'],FILTER_SANITIZE_NUMBER_INT);
+        $id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
+
         if(isset($filter) && filter_var($filter,FILTER_VALIDATE_INT)){
             if($filter >=1 && $filter<=5){
                 $comments = $this->model->filterComments($id,$filter);
                 if($comments){
-                    $this->view->response($comments);
+                    $this->view->response($comments,200);
+                }else{
+                    $this->view->response('Comments not found',204);
                 }
             }else{
-                $this->view->response('Error point',404);
+                $this->view->response('Points not found',204);
             }
         }else{
-            $this->view->response('Invalid filtering',200);
+            $this->view->response('Filter not found',200);
         }
     }
 

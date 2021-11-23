@@ -22,7 +22,7 @@
   <form id='form'>
     <div class="form-group m-2">
     <input class="form-check-input d-none" type="radio" name="id_news" id="exampleRadios1" value="{$news->id}" checked required>
-      <label for="exampleFormControlSelect1">Puntos</label>
+      <label for="exampleFormControlSelect1">Points</label>
       <select class="form-control" id="exampleFormControlSelect1" name ='points' required>
           <option value = '1'>1</option>
           <option value = '2'>2</option>
@@ -44,64 +44,75 @@
 {/if}
   
 
+<article class = 'content-view-news'>
+
+<div class='card m-5 content-filter'>
+
+  <form id="search-comment" class="p-2"  method='get'>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Order</label>
+    <select class="form-control" name ='order'>
+      <option value ='none'>None</option>
+      <option value ='asc-date'>Ascending Date</option>
+      <option value ='des-date'>Descending Date</option>
+      <option value ='asc-point'>Ascending Points</option>
+      <option value ='des-point'>Descending Points</option>
+    </select>
+  </div>
+    <div class="form-group">
+    <label for="exampleFormControlSelect1">Filter</label>
+    <select class="form-control" name='points'>
+      <option value ='1'>1</option>
+      <option value ='2'>2</option>
+      <option value ='3'>3</option>
+      <option value ='4'>4</option>
+      <option value ='5'>5</option>
+    </select>
+  </div>
+    <div>
+      <button type="submit" class="btn btn-primary ">Search</button>
+    </div>
+  </form>
+</div>
 
 
-<div class='card m-5'>
+<div class='card m-5 content-comment'>
   <div class="card-header">
    <div class="d-flex flex-row align-items-center justify-content-between">
      <h6 class="">Comments</h6>
-        <div class="dropdown no-arrow">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw">Order/Filter</i>
-           </a>
-           <div class="dropdown-menu dropdown-menu-right shadow " aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Order:</div>
-              <a class="dropdown-item" data-order="asc"  data-option='point'>ASC Points</a>
-              <a class="dropdown-item" data-order="desc" data-option='point'>DESC Points</a>
-              <a class="dropdown-item" data-order="asc" data-option='date'>ASC Date</a>
-              <a class="dropdown-item" data-order="desc" data-option='date'>DESC Date</a>
-              <div class="dropdown-divider"></div>
-              <div class="dropdown-header">Filter:</div>
-              <a class="dropdown-item" data-filter="1">1</a>
-              <a class="dropdown-item" data-filter="2">2</a>
-              <a class="dropdown-item" data-filter="3">3</a>
-              <a class="dropdown-item" data-filter="4">4</a>
-              <a class="dropdown-item" data-filter="5">5</a>
-           </div>
-        </div>
-      </div>
+    </div>
   </div>
+      <div class="alert alert-warning alert-dismissible fade show d-none" id='alert_filter' role="alert">
+    Filter applied! <strong> <a id='filter_delete'>Click Here</a></strong> to remove filter.
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" id = 'filter_not_found' role="alert">
+      Comments Not Found.
+    </div>
 
-  <div class="alert alert-warning alert-dismissible fade show d-none" id='alert_filter' role="alert">
-   Filter applied! <strong> <a id='filter_delete'>Click Here</a></strong> to remove filter.
-  </div>
-  <div class="alert alert-danger alert-dismissible fade show" id = 'filter_not_found' role="alert">
-    Comments Not Found.
-  </div>
-  <!--Comentarios-->
-
-  {literal}
-
-    <article class='comments' id = 'comments'>
-      <div class="card comments-card" v-for='c in comments'>
-        <div class="card-header" style="height: 80px;">
-        <p><strong>{{c.name}} {{c.surname}}</strong><span class="badge badge-primary ml-3" v-if='c.role == 0'>User</span><span class="badge badge-success ml-3" v-if='c.role == 1'>Admin</span></p>
-        <p>Points: <strong>{{c.points}}</strong> Date: <strong>{{c.date}}</strong></p>      
-        </div>
-        <div class="card-body">
-          {{c.comment}}
-          {/literal}
-          {if isset($smarty.session.user_id) && $smarty.session.role == 1}
-            <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
-          {/if}
-          {literal}
-        </div>
-      </div>
-    </article>
     
-  {/literal}
-
+    <article class='comments' id = 'comments' data-comment = '{$news->id}'>
+      
+     {literal}
+        <div class="card comments-card" v-for='c in comments'>
+          <div class="card-header" style="height: 80px;">
+          <p><strong>{{c.name}} {{c.surname}}</strong><span class="badge badge-primary ml-3" v-if='c.role == 0'>User</span><span class="badge badge-success ml-3" v-if='c.role == 1'>Admin</span></p>
+          <p>Points: <strong>{{c.points}}</strong> Date: <strong>{{c.date}}</strong></p>      
+          </div>
+          <div class="card-body">
+            {{c.comment}}
+            {/literal}
+            {if isset($smarty.session.user_id) && $smarty.session.role == 1}
+              <button class="btn btn-danger p-1 m-2" v-if ='' v-bind:data-id='c.id'>Delete</button>
+            {/if}
+          
+          </div>
+        </div>
+   
+    </article>
 </div>
 </article>
-<script src="./js/api-comments.js"></script>
+
+</article>
+
+<script src="./js/comments/main-comments.js" type = 'module'></script>
 {include file="./footer.tpl"}

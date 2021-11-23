@@ -21,7 +21,7 @@ Como administrador del sitio, quiero poder borrar comentarios.  ✓
 USER STORIES OPTATIVAS
 
 Como administrador del sitio, quiero poder asociar una imagen a un ítem. ✓
-Las imágenes de los “ítems” se deben poder subir y eliminar desde el ABM de los mismos. 
+Las imágenes de los “ítems” se deben poder subir y eliminar desde el ABM de los mismos.  ✓
 
 Como usuario quiero poder navegar los listados de ítems en forma paginada. ✓
 
@@ -35,6 +35,5 @@ Como usuario quiero poder filtrar los comentarios por cantidad de puntos.  (Via 
 	Se debe filtrar del lado del servidor.
 
 Notas:
+Busqueda por filtros, el buscador global no me lo toman.
 
-IMAGEN ECHO, FALTA EDITAR Y ELIMINAR IMAGEN DE UNA NOTICIA
-agregar vista a la busqueda

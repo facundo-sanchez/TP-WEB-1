@@ -35,8 +35,11 @@ class NewsView{
     }
     */
 
-    function renderFilter($category){
-        $this->view->assign('news',$category);
+    function renderFilter($id,$news,$page,$page_count){
+        $this->view->assign('category',$id);
+        $this->view->assign('news',$news);
+        $this->view->assign('page',$page);
+        $this->view->assign('page_count',$page_count);
         $this->view->display('./template/filter_category.tpl');
        
     }
