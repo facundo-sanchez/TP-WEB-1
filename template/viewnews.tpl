@@ -79,7 +79,7 @@
 <div class='card m-5 content-comment'>
   <div class="card-header">
    <div class="d-flex flex-row align-items-center justify-content-between">
-     <h6 class="">Comments</h6>
+     <h6>Comments</h6>
     </div>
   </div>
       <div class="alert alert-warning alert-dismissible fade show d-none" id='alert_filter' role="alert">

@@ -28,8 +28,6 @@ class AuthHelper{
         if(empty($_SESSION['role']) && $_SESSION['role'] == 0){
             header('Location:'.BASE_URL);
             die();
-        }else{
-            return true;
         }
     }
     public function SingOff(){
