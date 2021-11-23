@@ -34,6 +34,3 @@ Como usuario quiero poder ordenar los comentarios por antigüedad o puntaje, asc
 Como usuario quiero poder filtrar los comentarios por cantidad de puntos.  (Via API REST) ✓
 	Se debe filtrar del lado del servidor.
 
-Notas:
-Busqueda por filtros, el buscador global no me lo toman.
-
