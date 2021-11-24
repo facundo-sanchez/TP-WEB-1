@@ -91,6 +91,7 @@ export default class ApiComments {
 
     async filterComments(filter, data_comment) {
         hide_danger_filter();
+        hide_danger_filter();
 
         app.comments = [];
 
@@ -115,6 +116,8 @@ export default class ApiComments {
 
     async orderComments(order, data_comment) {
         hide_warning_filter();
+        hide_danger_filter();
+
         try {
             const response = await fetch(API_URL + data_comment + '/?order=' + order);
             if (response.status === 200) {
