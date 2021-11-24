@@ -21,20 +21,6 @@ class NewsModel extends SQLModel{
             echo 'ERROR'.$e->getMessage();
         }
     }
-    function countNews($sql,$id){
-        try{
-            $news = $this->connect->prepare($sql);
-            if($id !=null){
-                $news->execute([$id]);
-            }else{
-                $news->execute();
-            }
-            $result = $news->fetch(PDO::FETCH_OBJ);
-            return $result;
-        }catch(Exception $e){
-            echo 'ERROR'.$e->getMessage();
-        }
-    }
 
     function getNewsId($id){
         try{

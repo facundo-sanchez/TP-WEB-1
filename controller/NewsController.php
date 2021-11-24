@@ -4,18 +4,21 @@ require_once('./view/NewsView.php');
 require_once('./model/NewsModel.php');
 require_once('./helper/AuthHelper.php');
 require_once('./helper/CommentsHelper.php');
+require_once('./helper/PaginationHelper.php');
 
 class NewsController{
     private $model;
     private $view;
     private $auth;
     private $comments;
+    private $pagination;
 
     public function __construct(){
         $this->model = new NewsModel();
         $this->view = new NewsView();
         $this->auth = new AuthHelper();
         $this->comments = new CommentsHelper();
+        $this->pagination = new PaginationHelper();
     }
     
     //public access
@@ -23,21 +26,16 @@ class NewsController{
         $this->view->RenderMessage($title,$error);
     }
 
-    public function getPageNews($sql,$id){
-        $get_count_page = $this->model->countNews($sql,$id);
-        $page_count = ($get_count_page->news/4);
-        return  ceil($page_count);
-    }
-
     public function showHome($page){
         $page = filter_var($page,FILTER_SANITIZE_NUMBER_INT);
         if(!filter_var($page,FILTER_VALIDATE_INT)){
             $page = 1;
         }
-        $page_count = $this->getPageNews('SELECT COUNT(id) AS news FROM news',null);
-        $home = ($page-1)*4;
+        $page_count = $this->pagination->getPageNews('SELECT COUNT(id) AS news FROM news',null);
+      
+        $home = $this->pagination->getHomePage($page);
 
-        $news = $this->model->getNews($home,4);
+        $news = $this->model->getNews($home,$this->pagination->paging);
        
         if(empty($news)){
             $this->view->RenderMessage('Ups!','Not found news');
@@ -64,9 +62,10 @@ class NewsController{
         if(!filter_var($page,FILTER_VALIDATE_INT)){
            $page = 1;
         }
-        $page_count = $this->getPageNews('SELECT COUNT(a.id) AS news, a.id,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = ?',$id);
-        $home = ($page-1)*4;
-        $category_filter = $this->model->getFilter($id,$home,4);
+
+        $page_count = $this->pagination->getPageNews('SELECT COUNT(a.id) AS news, a.id,a.id_category,b.category FROM news a LEFT JOIN categories b ON a.id_category = b.id WHERE b.category = ?',$id);
+        $home = $this->pagination->getHomePage($page);
+        $category_filter = $this->model->getFilter($id,$home,$this->pagination->paging);
 
         if(empty($category_filter)){
             $this->view->RenderMessage('ERROR 204','Category or News not found');
@@ -98,10 +97,10 @@ class NewsController{
            $page = 1;
         }
         $this->auth->checkAdmin();
-        $page_count = $this->getPageNews('SELECT COUNT(id) AS news FROM news',null);
-        $home = ($page-1)*4;
+        $page_count = $this->pagination->getPageNews('SELECT COUNT(id) AS news FROM news',null);
+        $home = $this->pagination->getHomePage($page);
     
-        $news = $this->model->getNews($home,4);
+        $news = $this->model->getNews($home,$this->pagination->paging);
              
         $users = $this->auth->getUsers($_SESSION['user_id']);
         if(!empty($users)){
