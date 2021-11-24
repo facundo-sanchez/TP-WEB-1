@@ -91,7 +91,6 @@ export default class ApiComments {
 
     async filterComments(filter, data_comment) {
         hide_danger_filter();
-        hide_danger_filter();
 
         app.comments = [];
 
