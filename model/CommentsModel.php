@@ -87,6 +87,16 @@ class CommentsModel extends SQLModel{
     }
 
     function orderComments($sql,$id){
+        if($sql === 'asc-date'){
+            $sql = 'SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date ASC';
+        }elseif($sql === 'des-date'){
+            $sql ='SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date DESC';
+        }elseif($sql === 'asc-point'){
+            $sql = 'SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points ASC';
+        }elseif($sql === 'des-point'){
+            $sql = 'SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points DESC';
+        }
+        
         try{
             $query = $this->connect->prepare($sql);
             $query->execute([$id]);

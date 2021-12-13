@@ -107,16 +107,16 @@ class ApiComments extends ApiController{
         $order = filter_var($order,FILTER_SANITIZE_URL);
         $id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
         if($order === 'asc-date'){
-            $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date ASC',$id);
+            $comments = $this->model->orderComments('asc-date',$id);
             $this->view->response($comments);
         }elseif($order === 'des-date'){
-            $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY date DESC',$id);
+            $comments = $this->model->orderComments('des-date',$id);
             $this->view->response($comments);
         }elseif($order === 'asc-point'){
-            $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points ASC',$id);
+            $comments = $this->model->orderComments('asc-point',$id);
             $this->view->response($comments);
         }elseif($order === 'des-point'){
-            $comments = $this->model->orderComments('SELECT a.id,a.comment,a.points,a.date,a.id_news,b.name,b.surname,b.role FROM comments a LEFT JOIN users b ON a.id_users = b.id WHERE a.id_news = ? ORDER BY points DESC',$id);
+            $comments = $this->model->orderComments('des-point',$id);
             $this->view->response($comments);
         }
     }
